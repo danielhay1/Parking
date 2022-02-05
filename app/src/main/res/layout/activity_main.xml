@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/login_nav_fragment"
+
+    <fragment
+        android:id="@+id/fragment2"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:navGraph="@navigation/nav"
-        android:name="androidx.navigation.fragment.NavHostFragment">
-    </androidx.fragment.app.FragmentContainerView>
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.example.parking
+package com.example.parking.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
