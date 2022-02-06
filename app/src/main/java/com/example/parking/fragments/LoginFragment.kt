@@ -5,42 +5,35 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.translation.ViewTranslationRequest
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.parking.databinding.FragmentLoginBinding
-import com.example.parking.databinding.FragmentMainBinding
-import com.google.android.material.button.MaterialButton
 
 class LoginFragment : Fragment() {
-    private var _binding : FragmentLoginBinding? = null
-    private val binding get() = _binding!!
-    // UI components:
-    private var loginBtn : MaterialButton? = null
+    private var binding : FragmentLoginBinding? = null
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentLoginBinding.inflate(inflater,container,false)
-        return binding.root
+        binding = FragmentLoginBinding.inflate(inflater,container,false)
+        clickListener()
+
+
+
+
+        return binding?.root
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+    private fun clickListener() {
+        binding?.loginRegister?.setOnClickListener(BtnRegister)
     }
 
-//    fun initViews() {
-//        //var callback: (([Params]) -> ReturnType)? = null
-//        binding.loginBTNLogin.setOnClickListener(view -> {
-//            // do something here
-//        });
-//    }
-    fun login() {
-    }
+private val BtnRegister = View.OnClickListener {
+   // it!!.findNavController().navigate(R.id.viewTransactionsAction)
 
+}
 }

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="@drawable/gradient_background"
     android:gravity="center_horizontal"
-    tools:context=".fragments.SplashFragment">
+    >
 
     <ImageView
         android:id="@+id/splash_IMG_logo"

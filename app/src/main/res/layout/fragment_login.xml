@@ -81,7 +81,7 @@
             app:strokeColor="@color/white" />
 
         <TextView
-            android:id="@+id/login_TV_register"
+            android:id="@+id/login_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
