@@ -34,12 +34,12 @@ class LoginFragment : Fragment() {
         _binding = null
     }
 
-    fun initViews() {
-        //var callback: (([Params]) -> ReturnType)? = null
-        binding.loginBTNLogin.setOnClickListener(view -> {
-            // do something here
-        });
-    }
+//    fun initViews() {
+//        //var callback: (([Params]) -> ReturnType)? = null
+//        binding.loginBTNLogin.setOnClickListener(view -> {
+//            // do something here
+//        });
+//    }
     fun login() {
     }
 

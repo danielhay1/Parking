@@ -16,7 +16,8 @@
         android:layout_height="1dp"
         android:layout_weight="1"
         android:layout_marginTop="12dp"
-        android:src=""/>
+        android:background="@drawable/ic_launcher_background"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -93,7 +94,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="12dp"
             android:layout_weight="1"
-            android:src="" />
+            android:background="@drawable/ic_launcher_background" />
     </LinearLayout>
 
 </LinearLayout>
