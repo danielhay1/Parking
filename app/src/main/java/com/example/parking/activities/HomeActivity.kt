@@ -7,9 +7,12 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.onNavDestinationSelected
+
 import com.example.parking.R
 
 
@@ -46,7 +49,11 @@ class HomeActivity : AppCompatActivity() {
     }
     private lateinit var binding: ActivityHomeBinding
     private var isLocationTrakerOn = false
-    var gpsEnabled = false
+    private var gpsEnabled = false
+    private lateinit var navHostFragment:NavHostFragment
+    private lateinit var  navController: NavController
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +61,7 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        initValues()
         Log.d("home_activity", "onCreate: ")
         if(!MyLocationServices.getInstance(this).checkLocationPermission()) {
             requestPermission()
@@ -63,6 +71,15 @@ class HomeActivity : AppCompatActivity() {
         EnableMyLocationServices()
         initListeners()
 
+
+
+
+    }
+
+    private fun initValues() {
+        navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.home_FCV) as NavHostFragment
+         navController = navHostFragment.navController
 
     }
 
@@ -74,9 +91,22 @@ class HomeActivity : AppCompatActivity() {
 
 
     private val itemSelected  =  NavigationBarView.OnItemSelectedListener { item ->
-//        val navHostFragment: NavHostFragment? =
-//            supportFragmentManager.findFragmentById(R.id.home_FCV) as NavHostFragment?
-//
+
+        val currentFragment = navController.currentDestination?.id
+        val itemId = item.itemId
+
+        if(currentFragment == R.id.homeFragment2) {
+
+
+        }
+          if(item.itemId == R.id.posts) {
+              replaceFragment(R.id.action_homeFragment2_to_postFragment)
+
+          }
+
+        //else if()
+
+
 //        Log.d("dsffdsfdsfsdfsd" , "FDfdssfd" + navHostFragment!!.childFragmentManager.fragments[0].id)
 //        Log.d("FDfsdfs" , "dfssfd " + R.id.mapFragment)
 //        if(navHostFragment is R.id.mapFragment) {
@@ -90,11 +120,11 @@ class HomeActivity : AppCompatActivity() {
 //
 //            }
 //        }
-        val navHostFragment: Fragment? =
-            supportFragmentManager.findFragmentById(R.id.home_FCV)
-        navHostFragment?.childFragmentManager?.fragments?.get(0)
-        Log.d("FDfsdfs" , "dfssfd " +navHostFragment?.id)
-        Log.d("FDfsdfs" , "dfssfd " + R.id.mapFragment)
+//        val navHostFragment: Fragment? =
+//            supportFragmentManager.findFragmentById(R.id.home_FCV)
+//        navHostFragment?.childFragmentManager?.fragments?.get(0)
+//        Log.d("FDfsdfs" , "dfssfd " +navHostFragment?.id)
+//        Log.d("FDfsdfs" , "dfssfd " + R.id.mapFragment)
 
 //        val host = NavHostFragment.create(R.navigation.nav_internal)
 //        supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment,host).setPrimaryNavigationFragment(host).commit()
@@ -109,6 +139,14 @@ class HomeActivity : AppCompatActivity() {
         true
     }
 
+    private fun replaceFragment(action: Int) {
+        val options = NavOptions.Builder()
+            .setPopUpTo(navController.currentDestination!!.id, true)
+            .setLaunchSingleTop(true)
+            .build()
+        navController.navigate(action, null, options)
+
+    }
 
 
     private fun passToAnotherFragment(action: Int) {

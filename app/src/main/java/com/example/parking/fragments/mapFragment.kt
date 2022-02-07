@@ -86,6 +86,7 @@ class mapFragment : Fragment() {
         }
     }
 
+
     private fun initViews() {
         binding.mapBTNFollowMyCurrentLocation.setOnClickListener {
             autoFocusCurrentLocation = !autoFocusCurrentLocation

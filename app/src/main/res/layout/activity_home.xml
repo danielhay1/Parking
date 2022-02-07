@@ -13,6 +13,7 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_internal" />
 
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_alignParentBottom="true"
         android:id="@+id/bottomNav"
