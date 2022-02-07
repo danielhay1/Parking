@@ -9,9 +9,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.onNavDestinationSelected
 
 import com.example.parking.R
 
@@ -23,37 +21,17 @@ import com.example.parking.utils.MySignal
 import com.google.android.material.navigation.NavigationBarView
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class HomeActivity : AppCompatActivity() {
     companion object {
         // PERMISSION ASK REQUEST CODES:
         const val MY_PERMISSIONS_REQUEST_LOCATION = 1
     }
+
     private lateinit var binding: ActivityHomeBinding
     private var isLocationTrakerOn = false
     private var gpsEnabled = false
-    private lateinit var navHostFragment:NavHostFragment
-    private lateinit var  navController: NavController
-
-
+    private lateinit var navHostFragment: NavHostFragment
+    private lateinit var navController: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +41,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(view)
         initValues()
         Log.d("home_activity", "onCreate: ")
-        if(!MyLocationServices.getInstance(this).checkLocationPermission()) {
+        if (!MyLocationServices.getInstance(this).checkLocationPermission()) {
             requestPermission()
 
         }
@@ -72,14 +50,12 @@ class HomeActivity : AppCompatActivity() {
         initListeners()
 
 
-
-
     }
 
     private fun initValues() {
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.home_FCV) as NavHostFragment
-         navController = navHostFragment.navController
+        navController = navHostFragment.navController
 
     }
 
@@ -89,21 +65,44 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-
-    private val itemSelected  =  NavigationBarView.OnItemSelectedListener { item ->
+    private val itemSelected = NavigationBarView.OnItemSelectedListener { item ->
 
         val currentFragment = navController.currentDestination?.id
         val itemId = item.itemId
 
-        if(currentFragment == R.id.homeFragment2) {
+        if (currentFragment == R.id.homeFragment2) {
+            when (itemId) {
+                R.id.mapPage -> replaceFragment(R.id.action_homeFragment2_to_mapFragment)
+                R.id.myPostsPage -> replaceFragment(R.id.action_homeFragment2_to_myPostsFragment)
+                R.id.profilePage -> replaceFragment(R.id.action_homeFragment2_to_profileFragment)
+            }
+        }
+
+        if (currentFragment == R.id.myPostsFragment) {
+            when (itemId) {
+                R.id.mapPage -> replaceFragment(R.id.action_myPostsFragment_to_mapFragment)
+                R.id.postsPage -> replaceFragment(R.id.action_myPostsFragment_to_homeFragment2)
+                R.id.profilePage -> replaceFragment(R.id.action_myPostsFragment_to_profileFragment)
+            }
+        }
+        if (currentFragment == R.id.mapFragment) {
+            when (itemId) {
+                R.id.myPostsPage -> replaceFragment(R.id.action_mapFragment_to_myPostsFragment)
+                R.id.postsPage -> replaceFragment(R.id.action_mapFragment_to_homeFragment2)
+                R.id.profilePage -> replaceFragment(R.id.action_mapFragment_to_profileFragment)
+            }
 
 
         }
-          if(item.itemId == R.id.posts) {
-              replaceFragment(R.id.action_homeFragment2_to_postFragment)
+        if (currentFragment == R.id.profileFragment) {
+            when (itemId) {
+                R.id.myPostsPage -> replaceFragment(R.id.action_profileFragment_to_myPostsFragment)
+                R.id.postsPage -> replaceFragment(R.id.action_profileFragment_to_homeFragment2)
+                R.id.mapPage -> replaceFragment(R.id.action_profileFragment_to_mapFragment)
+            }
 
-          }
 
+        }
         //else if()
 
 
@@ -129,10 +128,10 @@ class HomeActivity : AppCompatActivity() {
 //        val host = NavHostFragment.create(R.navigation.nav_internal)
 //        supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment,host).setPrimaryNavigationFragment(host).commit()
 
-       // val currentFragment = NavHostFragment.findNavController(R.navigation.nav_internal).currentDestination?.id
+        // val currentFragment = NavHostFragment.findNavController(R.navigation.nav_internal).currentDestination?.id
 
 
-        when(item.itemId) {
+        when (item.itemId) {
 
 
         }
@@ -150,7 +149,6 @@ class HomeActivity : AppCompatActivity() {
 
 
     private fun passToAnotherFragment(action: Int) {
-
 
 
 //        val host = NavHostFragment.create(action)
@@ -179,10 +177,12 @@ class HomeActivity : AppCompatActivity() {
         /**
          * Asks the user do accept location permission.
          */
-        requestPermissions(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ), MY_PERMISSIONS_REQUEST_LOCATION)
+        requestPermissions(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ), MY_PERMISSIONS_REQUEST_LOCATION
+        )
     }
 
     private fun isGpsEnabled(): Boolean {
@@ -219,7 +219,6 @@ class HomeActivity : AppCompatActivity() {
         Log.d("home_activity", "onStop: ")
         disableMyLocationServices()
     }
-
 
 
 }

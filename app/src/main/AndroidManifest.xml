@@ -44,7 +44,7 @@
 
         </activity>
 
-<!--        <service android:name=".services.GPSTracker" />-->
+        <service android:name=".services.GPSTracker" />
     </application>
 
 </manifest>

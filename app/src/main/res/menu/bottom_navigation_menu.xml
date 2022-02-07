@@ -2,15 +2,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/mainPage"
+        android:id="@+id/mapPage"
         android:enabled="true"
         android:icon="@drawable/home_icon"
-        android:title="@string/news_Feed"
+        android:title="@string/map"
         app:itemIconSize="1dp"
         app:itemIconTint="@color/orange" />
 
     <item
-        android:id="@+id/myPostPage"
+        android:id="@+id/postsPage"
+        android:enabled="true"
+        android:icon="@drawable/group"
+        android:title="@string/Posts"
+        app:itemIconTint="@color/orange"
+        />
+    <item
+        android:id="@+id/myPostsPage"
         android:enabled="true"
         android:icon="@drawable/group"
         android:title="@string/my_post"
@@ -19,19 +26,12 @@
 
 
     <item
-        android:id="@+id/morePage"
+        android:id="@+id/profilePage"
         android:enabled="true"
         android:icon="@drawable/more_icon"
-        android:title="@string/more"
+        android:title="@string/Profile"
         app:itemIconSize="1dp"
         app:itemIconTint="@color/orange" />
 
-    <item
-        android:id="@+id/posts"
-        android:enabled="true"
-        android:icon="@drawable/home_icon"
-        android:title="@string/Posts"
-        app:itemIconSize="1dp"
-        app:itemIconTint="@color/orange" />
 
 </menu>

@@ -11,7 +11,8 @@
     <string name="invalid_email">Invalid Email address</string>
     <string name="authentication_failed">Authentication Failed</string>
     <string name="news_Feed">news_feed</string>
-    <string name="my_post">my_post</string>
-    <string name="more">more</string>
+    <string name="my_post">My_Posts</string>
+    <string name="Profile">Profile</string>
     <string name="Posts">Posts</string>
+    <string name="map">Map</string>
 </resources>
