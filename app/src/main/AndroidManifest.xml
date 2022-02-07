@@ -13,6 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/Theme.Parking">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDY9tIdSlLu3f3GxcVH0ejHzeWbqx06fcs" />
+
+
+
+
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true">
@@ -20,14 +28,23 @@
 
         </activity>
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.HomeActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.MainActivity"
+            android:exported="true">
+
+        </activity>
+
+<!--        <service android:name=".services.GPSTracker" />-->
     </application>
 
 </manifest>

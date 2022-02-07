@@ -91,15 +91,26 @@
                 />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
+
+    <ProgressBar
+        android:visibility="invisible"
+        android:id="@+id/register_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        />
+
+
     <com.google.android.material.button.MaterialButton
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         app:cornerRadius="50dp"
+        android:layout_marginTop="50dp"
         android:id="@+id/register_BTN_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:strokeColor="@color/white"
         android:text="register"
-        android:layout_marginTop="250dp"
+
         android:textColor="@color/white"
         />
 

@@ -19,9 +19,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         binding = FragmentMainBinding.inflate(inflater, container, false)
 
 
-
-
-
         return binding!!.root
     }
 

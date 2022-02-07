@@ -4,4 +4,14 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="like">Like</string>
     <string name="_0">0</string>
+    <string name="name_required">name Required</string>
+    <string name="email_required">Email Required</string>
+    <string name="password_required">Requires at least 6 characters</string>
+    <string name="already_account">There is already a user with this email address</string>
+    <string name="invalid_email">Invalid Email address</string>
+    <string name="authentication_failed">Authentication Failed</string>
+    <string name="news_Feed">news_feed</string>
+    <string name="my_post">my_post</string>
+    <string name="more">more</string>
+    <string name="Posts">Posts</string>
 </resources>

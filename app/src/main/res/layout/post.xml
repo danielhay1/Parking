@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,13 +38,13 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:id="@+id/POST_IMG_UserImage"
+                            android:id="@+id/post_IMG_UserImage"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:src="@mipmap/ic_launcher" />
 
                         <TextView
-                            android:id="@+id/POST_TV_UserName"
+                            android:id="@+id/post_TV_UserName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
@@ -79,17 +81,18 @@
                             android:layout_width="match_parent"
                             android:layout_height="250dp"
                             android:layout_below="@+id/textMoreInfo"
-                            android:layout_alignParentEnd="true"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="10dp"
                             android:scaleType="centerCrop" />
 
                         <com.google.android.gms.maps.MapView
+                            android:layout_marginTop="10dp"
                             android:id="@+id/map"
                             android:layout_width="match_parent"
                             android:layout_height="120dp"
-                            android:layout_alignParentEnd="true"
-                            android:enabled="true" />
+                            tools:context=".MapsActivity"
+                            android:enabled="true">
+                        </com.google.android.gms.maps.MapView>
 
                         <LinearLayout
                             android:id="@+id/layLike"
@@ -99,19 +102,22 @@
                             android:gravity="center_horizontal"
                             android:orientation="horizontal">
 
-<!--                            <com.jackandphantom.androidlikebutton.AndroidLikeButton-->
-<!--                                android:layout_width="28dp"-->
-<!--                                android:layout_height="30dp"-->
-<!--                                android:layout_marginTop="2dp"-->
-<!--                                app:anim_scale_factor="2.5"-->
-<!--                                app:dots_primary_color="@color/orange"-->
-<!--                                app:dots_secondary_color="@color/orange"-->
-<!--                                app:icon_size="8dp"-->
-<!--                                app:icon_type="heart"-->
-<!--                                app:is_enabled="true"-->
-<!--                                app:like_drawable="@drawable/filled_like"-->
-<!--                                app:liked="false"-->
-<!--                                app:unlike_drawable="@drawable/like" />-->
+                            <com.like.LikeButton
+                                android:id="@+id/likeBtn"
+                                android:layout_width="28dp"
+                                android:layout_height="30dp"
+                                android:layout_marginTop="2dp"
+                                app:anim_scale_factor="2.5"
+                                app:dots_primary_color="@color/orange"
+                                app:dots_secondary_color="@color/orange"
+                                app:icon_size="8dp"
+                                app:icon_type="heart"
+                                app:is_enabled="true"
+                                app:like_drawable="@drawable/filled_like"
+                                app:liked="false"
+                                app:unlike_drawable="@drawable/like">
+
+                            </com.like.LikeButton>
 
                             <TextView
                                 android:id="@+id/POST_TV_Likes"

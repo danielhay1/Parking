@@ -1,0 +1,37 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/mainPage"
+        android:enabled="true"
+        android:icon="@drawable/home_icon"
+        android:title="@string/news_Feed"
+        app:itemIconSize="1dp"
+        app:itemIconTint="@color/orange" />
+
+    <item
+        android:id="@+id/myPostPage"
+        android:enabled="true"
+        android:icon="@drawable/group"
+        android:title="@string/my_post"
+        app:itemIconTint="@color/orange"
+        />
+
+
+    <item
+        android:id="@+id/morePage"
+        android:enabled="true"
+        android:icon="@drawable/more_icon"
+        android:title="@string/more"
+        app:itemIconSize="1dp"
+        app:itemIconTint="@color/orange" />
+
+    <item
+        android:id="@+id/posts"
+        android:enabled="true"
+        android:icon="@drawable/home_icon"
+        android:title="@string/Posts"
+        app:itemIconSize="1dp"
+        app:itemIconTint="@color/orange" />
+
+</menu>

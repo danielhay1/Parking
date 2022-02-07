@@ -20,7 +20,7 @@ class GPSTracker : Service() {
         LocationListener { location ->
             currentLocation = LatLng(location.latitude, location.longitude)
             currentLocation?.let {
-                Log.d("pttt", "GPS Traker: Location= " + it.toString())
+                Log.d("gps_tracker", "GPS Traker: Location= " + it.toString())
                 sendCurrentLocation(it)
             }
         }
@@ -37,10 +37,10 @@ class GPSTracker : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d("pttt", "onStartCommand")
+        Log.d("gps_tracker", "onStartCommand")
         super.onStartCommand(intent, flags, startId)
         Thread {
-            Log.d("pttt", "Working Thread: " + Thread.currentThread().name)
+            Log.d("gps_tracker", "Working Thread: " + Thread.currentThread().name)
             updateCurrentLocation()
         }.start()
         return START_STICKY
@@ -62,21 +62,21 @@ class GPSTracker : Service() {
                 }
 
                 override fun onError(error: String?) {
-                    Log.d("pttt", "onError: $error")
+                    Log.d("gps_tracker", "onError: $error")
                 }
             },locationCallback)
         }
     }
 
     fun stopUpdateCurrentLocation() {
-        Log.d("pttt", "stopUpdateCurrentLocation")
+        Log.d("gps_tracker", "stopUpdateCurrentLocation")
         MyLocationServices.getInstance(applicationContext).stopLocationUpdate(object :
             MyLocationServices.CallBack_Location {
             override fun locationReady(location: Location?) {
             }
 
             override fun onError(error: String?) {
-                Log.d("pttt", "onError: $error")
+                Log.d("gps_tracker", "onError: $error")
             }
 
         })

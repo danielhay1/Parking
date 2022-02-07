@@ -8,23 +8,32 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.LinearInterpolator
 import com.example.parking.databinding.ActivitySplashBinding
+import com.example.parking.fragments.LoginFragment
+import com.google.firebase.auth.FirebaseAuth
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
     private val animationDuration = 3000
     private lateinit var binding: ActivitySplashBinding
+    private lateinit var mAuth: FirebaseAuth
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initValues()
         //  findView();
         showView(binding.splashIMGLogo)
     }
 
+    private fun initValues() {
+        mAuth = FirebaseAuth.getInstance()
+    }
 
-    fun showView(view: View) {
+
+
+   private fun showView(view: View) {
         view.alpha = 0.0f
         view.animate()
             .alpha(1.0f)
@@ -45,8 +54,14 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startApp() {
-        val intent = Intent(baseContext, MainActivity::class.java)
-        startActivity(intent)
+        val mIntent: Intent?
+
+        if(mAuth.currentUser!= null) {
+            mIntent = Intent(baseContext, HomeActivity::class.java)
+        }else {
+            mIntent = Intent(baseContext, MainActivity::class.java)
+        }
+        startActivity(mIntent)
         finish()
     }
 

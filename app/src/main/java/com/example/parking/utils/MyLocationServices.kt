@@ -39,12 +39,15 @@ class MyLocationServices(private val appContext: Context) {
 
     }
     init {
-        if (!isGpsEnabled()) {
-            //GPS is not enabled !!
-            Log.d("pttt", "GPS is not enabled")
-        }
+//        if (!isGpsEnabled()) {
+//            //GPS is not enabled !!
+//            Log.d("pttt", "GPS is not enabled")
+//        }
     }
+
+
     public fun isGpsEnabled(): Boolean {
+        //return locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER) ?: false
         return locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
@@ -128,6 +131,8 @@ class MyLocationServices(private val appContext: Context) {
             callBack_location.onError("Location update not requested")
         }
     }
+
+
 }
 
 
