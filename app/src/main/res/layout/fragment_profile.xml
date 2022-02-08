@@ -43,17 +43,17 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/profile_TV_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Username"
                     android:textSize="18sp" />
 
                 <TextView
+                    android:id="@+id/profile_TV_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Email"
                     android:textSize="18sp" />
 
             </LinearLayout>
@@ -67,19 +67,30 @@
             android:background="@drawable/gradient_background">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageview_account_profile"
+                android:id="@+id/profile_IMG"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
                 android:src="@mipmap/ic_launcher" />
-
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/profile_BTN_Logout"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="10dp"
+                android:text="Logout"
+                android:textColor="@color/white"
+                app:cornerRadius="50dp"
+                app:strokeColor="@color/white" />
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton"
+                android:id="@+id/profile_FAB_editImage"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/imageview_account_profile"
+                android:layout_alignEnd="@+id/profile_IMG"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="40dp"
                 android:src="@drawable/ic_baseline_edit"
@@ -87,28 +98,4 @@
         </RelativeLayout>
 
     </RelativeLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/profile_BTN_Settings"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_above="@id/profile_BTN_Logout"
-        android:layout_margin="4dp"
-        android:text="Settings"
-        android:textColor="@color/purple_700"
-        app:cornerRadius="50dp"
-        app:strokeColor="@color/purple_700" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/profile_BTN_Logout"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="4dp"
-        android:text="Logout"
-        android:textColor="@color/purple_700"
-        app:cornerRadius="50dp"
-        app:strokeColor="@color/purple_700" />
 </RelativeLayout>
