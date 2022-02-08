@@ -6,10 +6,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isGone
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.setupWithNavController
 
 import com.example.parking.R
 
@@ -18,7 +28,9 @@ import com.example.parking.databinding.ActivityHomeBinding
 import com.example.parking.services.GPSTracker
 import com.example.parking.utils.MyLocationServices
 import com.example.parking.utils.MySignal
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.navigation.NavigationView
 
 
 class HomeActivity : AppCompatActivity() {
@@ -32,6 +44,7 @@ class HomeActivity : AppCompatActivity() {
     private var gpsEnabled = false
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
+    val fm: FragmentManager = supportFragmentManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,113 +60,26 @@ class HomeActivity : AppCompatActivity() {
         }
         gpsEnabled = isGpsEnabled()
         EnableMyLocationServices()
-        initListeners()
+
+
+        //  addToBackStack()
 
 
     }
+
 
     private fun initValues() {
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.home_FCV) as NavHostFragment
         navController = navHostFragment.navController
+        NavigationUI.setupWithNavController(
+            binding.bottomNav,
+            navController
+        )
+
 
     }
 
-    private fun initListeners() {
-        binding.bottomNav.setOnItemSelectedListener(itemSelected)
-
-    }
-
-
-    private val itemSelected = NavigationBarView.OnItemSelectedListener { item ->
-
-        val currentFragment = navController.currentDestination?.id
-        val itemId = item.itemId
-
-        if (currentFragment == R.id.homeFragment2) {
-            when (itemId) {
-                R.id.mapPage -> replaceFragment(R.id.action_homeFragment2_to_mapFragment)
-                R.id.myPostsPage -> replaceFragment(R.id.action_homeFragment2_to_myPostsFragment)
-                R.id.profilePage -> replaceFragment(R.id.action_homeFragment2_to_profileFragment)
-            }
-        }
-
-        if (currentFragment == R.id.myPostsFragment) {
-            when (itemId) {
-                R.id.mapPage -> replaceFragment(R.id.action_myPostsFragment_to_mapFragment)
-                R.id.postsPage -> replaceFragment(R.id.action_myPostsFragment_to_homeFragment2)
-                R.id.profilePage -> replaceFragment(R.id.action_myPostsFragment_to_profileFragment)
-            }
-        }
-        if (currentFragment == R.id.mapFragment) {
-            when (itemId) {
-                R.id.myPostsPage -> replaceFragment(R.id.action_mapFragment_to_myPostsFragment)
-                R.id.postsPage -> replaceFragment(R.id.action_mapFragment_to_homeFragment2)
-                R.id.profilePage -> replaceFragment(R.id.action_mapFragment_to_profileFragment)
-            }
-
-
-        }
-        if (currentFragment == R.id.profileFragment) {
-            when (itemId) {
-                R.id.myPostsPage -> replaceFragment(R.id.action_profileFragment_to_myPostsFragment)
-                R.id.postsPage -> replaceFragment(R.id.action_profileFragment_to_homeFragment2)
-                R.id.mapPage -> replaceFragment(R.id.action_profileFragment_to_mapFragment)
-            }
-
-
-        }
-        //else if()
-
-
-//        Log.d("dsffdsfdsfsdfsd" , "FDfdssfd" + navHostFragment!!.childFragmentManager.fragments[0].id)
-//        Log.d("FDfsdfs" , "dfssfd " + R.id.mapFragment)
-//        if(navHostFragment is R.id.mapFragment) {
-//
-//
-//        }
-//        Log.d("FDfsdfs" , "dfssfd " )
-//        val navHost = supportFragmentManager.findFragmentById(R.id.bottomNav)
-//        navHost?.let { navFragment ->
-//            navFragment.childFragmentManager.primaryNavigationFragment?.let {fragment->
-//
-//            }
-//        }
-//        val navHostFragment: Fragment? =
-//            supportFragmentManager.findFragmentById(R.id.home_FCV)
-//        navHostFragment?.childFragmentManager?.fragments?.get(0)
-//        Log.d("FDfsdfs" , "dfssfd " +navHostFragment?.id)
-//        Log.d("FDfsdfs" , "dfssfd " + R.id.mapFragment)
-
-//        val host = NavHostFragment.create(R.navigation.nav_internal)
-//        supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment,host).setPrimaryNavigationFragment(host).commit()
-
-        // val currentFragment = NavHostFragment.findNavController(R.navigation.nav_internal).currentDestination?.id
-
-
-        when (item.itemId) {
-
-
-        }
-        true
-    }
-
-    private fun replaceFragment(action: Int) {
-        val options = NavOptions.Builder()
-            .setPopUpTo(navController.currentDestination!!.id, true)
-            .setLaunchSingleTop(true)
-            .build()
-        navController.navigate(action, null, options)
-
-    }
-
-
-    private fun passToAnotherFragment(action: Int) {
-
-
-//        val host = NavHostFragment.create(action)
-//        supportFragmentManager.beginTransaction().replace(R.id.homeFragment2, host).setPrimaryNavigationFragment(host).commit()
-    }
 
     private fun EnableMyLocationServices() {
         // Bind to LocalService
@@ -220,5 +146,17 @@ class HomeActivity : AppCompatActivity() {
         disableMyLocationServices()
     }
 
+    fun visibility(visibility: Int) {
+        binding.bottomNav.visibility = visibility
 
+
+    }
+
+    override fun onBackPressed() {
+        val currentFragment = navController.currentDestination?.id
+        if (currentFragment == R.id.postFragment) {
+            visibility(View.VISIBLE)
+        }
+        super.onBackPressed()
+    }
 }

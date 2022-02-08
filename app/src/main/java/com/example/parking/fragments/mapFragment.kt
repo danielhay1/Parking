@@ -47,6 +47,10 @@ class mapFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    init {
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

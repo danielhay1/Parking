@@ -1,9 +1,13 @@
 package com.example.parking.recyclers
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.parking.databinding.PostBinding
 import com.example.parking.objects.MapManagerRecycler
 import com.example.parking.objects.Post
@@ -33,9 +37,19 @@ class RecyclerPosts(var postList: ArrayList<Post>): RecyclerView.Adapter<Recycle
     class ViewHolder(private var binding: PostBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bindItems(post: Post) {
-            binding.POSTTVTitle.text = post.typeParking
+            binding.POSTTVTitle.text = post.locationParking
+            setImageUserWithUriGlide(post.imageParking , binding.POSTIMGParking)
+            binding.POSTTVDescription.text = post.infoParking
             initMap(binding.map , post.latitude , post.longitude)
 
+        }
+
+        private fun setImageUserWithUriGlide(stringImg: String , view:ImageView) {
+            Log.d("profile_fragment", "setImageUserWithUriGlide: ")
+            Glide.with(view.context)
+                .load(stringImg)
+                .centerCrop()
+                .into(view)
         }
 
 
@@ -43,6 +57,8 @@ class RecyclerPosts(var postList: ArrayList<Post>): RecyclerView.Adapter<Recycle
             MapManagerRecycler(map , latitude , longitude)
         }
     }
+
+
 
 
 }

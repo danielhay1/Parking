@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_internal"
-    app:startDestination="@id/mapFragment">
+    app:startDestination="@id/mapFragment"
+    >
 
     <fragment
         android:id="@+id/postFragment"
@@ -16,14 +17,8 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment2_to_profileFragment"
-            app:destination="@id/profileFragment" />
-        <action
             android:id="@+id/action_homeFragment2_to_myPostsFragment"
             app:destination="@id/myPostsFragment" />
-        <action
-            android:id="@+id/action_homeFragment2_to_mapFragment"
-            app:destination="@id/mapFragment" />
         <action
             android:id="@+id/action_homeFragment2_to_postFragment"
             app:destination="@id/postFragment" />
@@ -34,15 +29,8 @@
         android:label="fragment_my_posts"
         tools:layout="@layout/fragment_my_posts" >
         <action
-            android:id="@+id/action_myPostsFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
-        <action
-            android:id="@+id/action_myPostsFragment_to_homeFragment2"
-            app:destination="@id/homeFragment2" />
-        <action
             android:id="@+id/action_myPostsFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
-
     </fragment>
     <fragment
         android:id="@+id/likesFragment"
@@ -53,20 +41,7 @@
         android:id="@+id/profileFragment"
         android:name="com.example.parking.fragments.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
-        <action
-            android:id="@+id/action_profileFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
-        <action
-            android:id="@+id/action_profileFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
-        <action
-            android:id="@+id/action_profileFragment_to_myPostsFragment"
-            app:destination="@id/myPostsFragment" />
-        <action
-            android:id="@+id/action_profileFragment_to_homeFragment2"
-            app:destination="@id/homeFragment2" />
-    </fragment>
+        tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.parking.fragments.SettingsFragment"
@@ -77,12 +52,6 @@
         android:name="com.example.parking.fragments.mapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" >
-        <action
-            android:id="@+id/action_mapFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
-        <action
-            android:id="@+id/action_mapFragment_to_myPostsFragment"
-            app:destination="@id/myPostsFragment" />
         <action
             android:id="@+id/action_mapFragment_to_homeFragment2"
             app:destination="@id/homeFragment2" />

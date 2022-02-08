@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.HomeActivity">
-    <androidx.fragment.app.FragmentContainerView
+    <fragment
         android:id="@+id/home_FCV"
+        android:layout_above="@id/bottomNav"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,9 +20,6 @@
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:itemIconTint="@color/black"
-        app:itemRippleColor="#D3D3D3"
-        app:itemTextColor="@color/black"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu"
         tools:ignore="MissingConstraints" />

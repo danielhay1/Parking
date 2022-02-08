@@ -1,70 +1,116 @@
 package com.example.parking.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import androidx.appcompat.widget.Toolbar
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.parking.InterFaces.GetAllPostCallBack
 import com.example.parking.R
+import com.example.parking.activities.HomeActivity
+import com.example.parking.comparables.postComparator
 import com.example.parking.databinding.FragmentHomeBinding
+import com.example.parking.objects.DBManager
 import com.example.parking.objects.Post
 import com.example.parking.recyclers.RecyclerPosts
-import java.util.ArrayList
+import java.util.*
+import kotlin.collections.ArrayList
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment() , GetAllPostCallBack {
 
     private lateinit var binding:FragmentHomeBinding
+    private lateinit var homeActivity:HomeActivity
+    private lateinit var dbManager:DBManager
+    private lateinit var  allPost:ArrayList<Post>
+
+
+    init {
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
         binding = FragmentHomeBinding.inflate(inflater, container , false)
 
-        val allpost: ArrayList<Post> = ArrayList()
-        allpost.add(Post("Fdsfsd"))
-        val obj_adapter = RecyclerPosts(allpost)
-        
+
+        listeners()
+        initValues()
+        initCallBack()
+        getPostFromDB()
+
+       // allpost.add(Post("Fdsfsd"))
+
+
+
+
+        val obj_adapter = RecyclerPosts(allPost)
+
         binding.homeREVPosts.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         binding.homeREVPosts.adapter = obj_adapter
+
 
 
         return binding.root
     }
 
-
-    override fun onResume() {
-        super.onResume()
+    private fun initCallBack() {
+        dbManager.initGetAllPostCallBack(this)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    private fun getPostFromDB() {
+        dbManager.getAllPost()
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun initValues() {
+        homeActivity = activity as HomeActivity
+        dbManager = DBManager()
+        allPost = ArrayList()
     }
 
-    override fun onPause() {
-        super.onPause()
+    private fun listeners() {
+        binding.includeHomeParking.topAppBar.setOnMenuItemClickListener(clickItem)
     }
 
-    override fun onStop() {
-        super.onStop()
+    private val clickItem = Toolbar.OnMenuItemClickListener { item: MenuItem ->
+        val id = item.itemId
+        if (id == R.id.postFragment) {
+            passToAnotherFragment(R.id.action_homeFragment2_to_postFragment)
+            homeActivity.visibility(View.GONE)
+        }
+        true
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    private fun passToAnotherFragment(action: Int) {
+        findNavController().navigate(
+            action,
+            null,
+            navOptions { // Use the Kotlin DSL for building NavOptions
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+            }
+        )
     }
 
-    override fun onLowMemory() {
-        super.onLowMemory()
+
+    override fun getAllPostCallBack(posts: ArrayList<Post>) {
+        Collections.sort(posts , postComparator())
+        this.allPost.addAll(posts)
+        binding.homeREVPosts.adapter?.notifyItemRangeInserted(0, posts.size)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
+
+
+
 }

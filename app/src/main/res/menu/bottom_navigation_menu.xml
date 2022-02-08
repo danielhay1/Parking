@@ -2,22 +2,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/mapPage"
+        android:orderInCategory="1"
+        android:id="@+id/mapFragment"
         android:enabled="true"
         android:icon="@drawable/home_icon"
         android:title="@string/map"
+        app:showAsAction="always"
         app:itemIconSize="1dp"
         app:itemIconTint="@color/orange" />
 
     <item
-        android:id="@+id/postsPage"
+        android:orderInCategory="2"
+        android:id="@+id/homeFragment2"
         android:enabled="true"
+        app:showAsAction="ifRoom"
+
         android:icon="@drawable/group"
         android:title="@string/Posts"
         app:itemIconTint="@color/orange"
         />
     <item
-        android:id="@+id/myPostsPage"
+        android:orderInCategory="3"
+        app:showAsAction="always"
+        android:id="@+id/myPostsFragment"
         android:enabled="true"
         android:icon="@drawable/group"
         android:title="@string/my_post"
@@ -26,7 +33,8 @@
 
 
     <item
-        android:id="@+id/profilePage"
+        android:orderInCategory="4"
+        android:id="@+id/profileFragment"
         android:enabled="true"
         android:icon="@drawable/more_icon"
         android:title="@string/Profile"

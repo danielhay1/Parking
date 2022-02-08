@@ -1,9 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.PostFragment">
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/titleShareParking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/share_empty_parking"
+            android:textColor="@color/orange"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
 
-</RelativeLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/locationParking"
+            style="@style/myTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleShareParking"
+            android:layout_marginTop="10dp"
+            android:hint="@string/enter_location"
+            android:textColorHint="@color/light_gray"
+            app:helperTextTextColor="@color/red"
+            app:hintTextColor="@color/orange">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/orange" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textMoreInfo"
+            style="@style/myTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layMapAndPicture"
+            android:layout_marginTop="50dp"
+            android:hint="@string/more_info"
+            android:textColorHint="@color/light_gray"
+            app:hintTextColor="@color/orange">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:lines="3"
+                android:textColor="@color/orange" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/layMapAndPicture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/locationParking"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_weight="1"
+                tools:context=".MapsActivity">
+
+            </androidx.fragment.app.FragmentContainerView>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:id="@+id/RelativePicture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="5dp">
+
+                    <ImageView
+                        android:id="@+id/imageParking"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginEnd="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:contentDescription="@string/parking_picture"
+                        android:scaleType="centerCrop" />
+
+                    <ImageView
+                        android:id="@+id/cameraIcon"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/photo_icon"
+                        android:backgroundTint="@color/orange"
+                        android:contentDescription="@string/icon_camera" />
+
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/errorMsgImageRequired"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/RelativePicture"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/image_required"
+                    android:textColor="#cc0000"
+                    android:visibility="invisible">
+
+
+                </TextView>
+            </RelativeLayout>
+        </LinearLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/postBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textMoreInfo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:background="@color/orange"
+            android:padding="20dp"
+            android:text="@string/post"
+            android:textSize="20sp"
+            app:backgroundTint="@null" />
+
+    </RelativeLayout>
+</ScrollView>
