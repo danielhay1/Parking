@@ -62,7 +62,7 @@ class PostFragment : Fragment() , ImageUriCallBack {
 
 
         initValues()
-        initMap(inflater,container)
+       // initMap(inflater,container)
         //activateMap()
         initListeners()
         initObjects()
@@ -326,11 +326,11 @@ class PostFragment : Fragment() , ImageUriCallBack {
         //registerLocationReceiver()
     }
 
-    override fun onStop() {
-        super.onStop()
-        Log.d("post_fragment", "POST FRAGMENT- onStop: ")
-        unRegisterLocationReceiver(locationReceiver)
-    }
+//    override fun onStop() {
+//        super.onStop()
+//        Log.d("post_fragment", "POST FRAGMENT- onStop: ")
+//        unRegisterLocationReceiver(locationReceiver)
+//    }
 
 
 //    fun initNewPOstFragmentCallBack(newPostCallBack: newPostCallBack?) {

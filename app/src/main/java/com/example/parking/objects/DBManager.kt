@@ -12,14 +12,19 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 
 import com.example.parking.InterFaces.GetAllPostCallBack
-import com.example.parking.comparables.postComparator
+import com.example.parking.InterFaces.GetMyPostsCallBack
+import com.example.parking.fragments.MyPostsFragment
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.firestore.DocumentSnapshot
 import java.util.*
 
 
 class DBManager {
     private val db = Firebase.firestore
     private var imageUriCallBack: ImageUriCallBack? = null
-    private var GetAllPostCallBack:GetAllPostCallBack? = null
+    private var getAllPostCallBack: GetAllPostCallBack? = null
+    private var getMyPostsCallBack: GetMyPostsCallBack? = null
 
 
     companion object {
@@ -32,8 +37,13 @@ class DBManager {
         this.imageUriCallBack = imageUriCallBack
     }
 
-    fun initGetAllPostCallBack(getAllPostCallBack:GetAllPostCallBack) {
-        this.GetAllPostCallBack = getAllPostCallBack
+    fun initGetAllPostCallBack(getAllPostCallBack: GetAllPostCallBack) {
+        this.getAllPostCallBack = getAllPostCallBack
+
+    }
+
+    fun initGetMyPostCallBack(myPostsFragment: GetMyPostsCallBack) {
+        this.getMyPostsCallBack = myPostsFragment
 
     }
 
@@ -62,7 +72,7 @@ class DBManager {
                 getImageUri(
                     taskSnapshot
                 )
-            }.addOnFailureListener{
+            }.addOnFailureListener {
 
             }
     }
@@ -77,8 +87,8 @@ class DBManager {
                     imageUriCallBack?.imageUriCallBack(imageUrl)
                 }
             }
-        }else {
-            Log.d("sdffsdfsd" , "FDSfsdfsdsd")
+        } else {
+            Log.d("sdffsdfsd", "FDSfsdfsdsd")
         }
     }
 
@@ -92,6 +102,7 @@ class DBManager {
             .collection(POST).document(post.docId)
         newUser.set(post).addOnSuccessListener { aVoid: Void? -> }
     }
+
     private fun savePostInAllPost(post: Post) {
         val newUser = db.collection(ALL_POST).document(post.docId)
         newUser.set(post).addOnSuccessListener { aVoid: Void? -> }
@@ -103,7 +114,7 @@ class DBManager {
         db.collection(ALL_POST).get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                   // Log.d("FDSsdfsdf", "Error getting documents: ")
+                    // Log.d("FDSsdfsdf", "Error getting documents: ")
                     val list: ArrayList<Post> = ArrayList()
                     for (document in task.result) {
                         val post: Post = document.toObject(Post::class.java)
@@ -111,7 +122,7 @@ class DBManager {
 
                     }
 
-                  GetAllPostCallBack?.getAllPostCallBack(list)
+                    getAllPostCallBack?.getAllPostCallBack(list)
                 } else {
                     Log.d("FDSsdfsdf", "Error getting documents: ")
                 }
@@ -145,6 +156,79 @@ class DBManager {
     }
 
 
+    fun getMyPostsFromDB() {
+        db.collection(USERS).document(AuthUtils.getCurrentUser()!!).collection(POST).get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Log.d("FDSsdfsdf", "Error getting documents: ")
+                    val list: ArrayList<Post> = ArrayList()
+                    for (document in task.result) {
+                        val post: Post = document.toObject(Post::class.java)
+                        list.add(post)
 
+                    }
+                    getMyPostsCallBack?.getMyPostsCallBack(list)
+                } else {
+                    Log.d("FDSsdfsdf", "Error getting documents: ")
+                }
+            }
 
+    }
+
+    fun updateLike(post: Post) {
+
+        db.collection(ALL_POST)
+            .document(post.docId).get()
+            .addOnCompleteListener { task: Task<DocumentSnapshot> ->
+                if (task.isSuccessful) {
+                    val documentSnapshot = task.result
+                    var updatePost = documentSnapshot.toObject(Post::class.java)
+                    if (updatePost != null) {
+                        Log.d("FSDfdssfd" , "DSFfsdfd" + updatePost.numLiking)
+                        updatePost = post
+                        updateAllPostInFireStore(updatePost)
+                        updatePostInMyPostFireStore(updatePost)
+                    }
+                }
+            }
+    }
+
+    private fun updatePostInMyPostFireStore(updatePost: Post) {
+        db.collection(USERS)
+            .document(updatePost.currentUserId)
+            .collection(POST)
+            .document(updatePost.docId)
+            .set(updatePost).addOnSuccessListener { unused: Void? -> }
+    }
+
+    private fun updateAllPostInFireStore(updatePost: Post) {
+        db.collection(ALL_POST)
+            .document(updatePost.docId).set(updatePost)
+            .addOnSuccessListener { unused: Void? ->
+                Log.d("SDFfds" , "FDSfds")
+
+            }
+
+    }
+
+    fun deleteLikeFromFireStore(post: Post) {
+        db.collection(ALL_POST)
+            .document(post.docId).get()
+            .addOnCompleteListener { task: Task<DocumentSnapshot?> ->
+                if (task.isSuccessful) {
+                    handleDeleteLikeFireStore(task)
+                }
+            }
+
+    }
+
+    private fun handleDeleteLikeFireStore(task: Task<DocumentSnapshot?>) {
+        val documentSnapshot = task.result!!
+        val updatePost = documentSnapshot.toObject(Post::class.java)
+        if (updatePost != null) {
+            updateAllPostInFireStore(updatePost)
+            updatePostInMyPostFireStore(updatePost)
+        }
+
+    }
 }

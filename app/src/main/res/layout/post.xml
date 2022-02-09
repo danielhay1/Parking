@@ -106,8 +106,6 @@
                                 android:layout_width="25dp"
                                 android:layout_height="match_parent"
                                 app:anim_scale_factor="2.5"
-                                app:dots_primary_color="@color/orange"
-                                app:dots_secondary_color="@color/orange"
                                 app:icon_size="8dp"
                                 app:icon_type="heart"
                                 app:is_enabled="true"

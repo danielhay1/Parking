@@ -5,7 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.parking.InterFaces.GetMyPostsCallBack
 import com.example.parking.R
+import com.example.parking.comparables.postComparator
+import com.example.parking.databinding.FragmentMyPostsBinding
+import com.example.parking.objects.DBManager
+import com.example.parking.objects.Post
+import com.example.parking.recyclers.RecyclerPosts
+import java.util.*
+import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,48 +27,53 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MyPostsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MyPostsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class MyPostsFragment : Fragment() , GetMyPostsCallBack{
 
-    init {
 
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentMyPostsBinding
+    private lateinit var  myPosts:ArrayList<Post>
+    private lateinit var  dbManager: DBManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_posts, container, false)
+    ): View {
+        binding = FragmentMyPostsBinding.inflate(inflater , container , false)
+
+        initValues()
+        initRecycler()
+        initCallBacks()
+        getMyPostsFromDB()
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MyPostsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MyPostsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun getMyPostsFromDB() {
+        dbManager.getMyPostsFromDB()
     }
+
+    private fun initCallBacks() {
+        dbManager.initGetMyPostCallBack(this)
+    }
+
+    private fun initRecycler() {
+        val mAdapter = RecyclerPosts(myPosts)
+        binding.myPostREVPosts.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+        binding.myPostREVPosts.adapter = mAdapter
+
+    }
+
+    private fun initValues() {
+        myPosts = ArrayList()
+        dbManager = DBManager()
+    }
+
+    override fun getMyPostsCallBack(posts: ArrayList<Post>) {
+        //Collections.sort(posts , postComparator())
+        myPosts.addAll(posts)
+        binding.myPostREVPosts.adapter?.notifyItemRangeInserted(0, posts.size)
+
+    }
+
+
 }
