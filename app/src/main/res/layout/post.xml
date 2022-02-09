@@ -25,9 +25,12 @@
 
                 <LinearLayout
                     android:layout_width="380dp"
-                    android:layout_height="587dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:layout_marginLeft="12dp"
-                    android:layout_margin="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="12dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -91,13 +94,14 @@
                             android:layout_height="120dp"
                             android:layout_marginTop="10dp"
                             android:enabled="true"
-                            tools:context=".MapsActivity"></com.google.android.gms.maps.MapView>
+                            tools:context=".MapsActivity" />
 
                         <LinearLayout
+                            android:layout_marginTop="10dp"
                             android:id="@+id/layLike"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
+                            android:layout_height="match_parent"
+
                             android:gravity="center_horizontal"
                             android:orientation="horizontal">
 
@@ -135,16 +139,7 @@
                                 android:textColor="@color/gray"
                                 android:textSize="17sp" />
 
-<!--                            <TextView-->
-<!--                                android:id="@+id/kindOfParking"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_alignParentEnd="true"-->
-<!--                                android:layout_marginStart="10dp"-->
-<!--                                android:gravity="right"-->
-<!--                                android:textColor="@color/orange"-->
-<!--                                android:textSize="17sp"-->
-<!--                                android:textStyle="bold" />-->
+
 
                         </LinearLayout>
                     </LinearLayout>
