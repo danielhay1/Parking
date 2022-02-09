@@ -52,6 +52,7 @@ class RecyclerPosts(var postList: ArrayList<Post>) : RecyclerView.Adapter<Recycl
             setUsername(post.currentUserId)
             setUserImage(post.currentUserId)
             binding.amountOfLikes.text = post.numLiking.toString()
+            isCurrentUserMakeLike(binding.POSTTVLikes,binding.likeBtn, post)
             likeBtnListener(binding.amountOfLikes, binding.POSTTVLikes, binding.likeBtn, post)
 
         }
@@ -97,6 +98,7 @@ class RecyclerPosts(var postList: ArrayList<Post>) : RecyclerView.Adapter<Recycl
                 override fun liked(likeButton: LikeButton) {
                     textViewLike.setTextColor(ContextCompat.getColor(textViewLike.context,R.color.orange))
                     post.numLiking += 1
+                    AuthUtils.getCurrentUser()?.let { post.addWhoMakeLike(it) }
                     dbManager.updateLike(post)
                     textViewNumLikes.text = post.numLiking.toString()
                 }
@@ -105,6 +107,7 @@ class RecyclerPosts(var postList: ArrayList<Post>) : RecyclerView.Adapter<Recycl
                     textViewLike.setTextColor(ContextCompat.getColor(textViewLike.context,R.color.gray))
                     if (post.numLiking > 0) {
                         post.numLiking -= 1
+                        AuthUtils.getCurrentUser()?.let { post.deleteWhoDeleteLike(it) }
                         textViewNumLikes.text = post.numLiking.toString()
                     } else {
                         textViewNumLikes.text = 0.toString()
@@ -112,6 +115,19 @@ class RecyclerPosts(var postList: ArrayList<Post>) : RecyclerView.Adapter<Recycl
                     dbManager.deleteLikeFromFireStore(post)
                 }
             })
+        }
+        private fun isCurrentUserMakeLike(
+            textViewLike: TextView ,
+            likeBtn:LikeButton,
+            post: Post
+        ) {
+            if (post.isCurrentUserMakeLike()) {
+                textViewLike.setTextColor(ContextCompat.getColor(textViewLike.context,R.color.orange))
+                likeBtn.isLiked = true
+            } else {
+                textViewLike.setTextColor(ContextCompat.getColor(textViewLike.context,R.color.gray))
+                likeBtn.isLiked = false
+            }
         }
     }
 

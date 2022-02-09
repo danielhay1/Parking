@@ -1,14 +1,12 @@
 package com.example.parking.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,20 +45,22 @@ class HomeFragment : Fragment() , GetAllPostCallBack {
         initValues()
         initCallBack()
         getPostFromDB()
-
-       // allpost.add(Post("Fdsfsd"))
-
-
-
-
-        val obj_adapter = RecyclerPosts(allPost)
-
-        binding.homeREVPosts.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        binding.homeREVPosts.adapter = obj_adapter
-
+        initRecycler()
+        visibilityProgressBarAllPost(View.VISIBLE)
 
 
         return binding.root
+    }
+
+    private fun visibilityProgressBarAllPost(visible: Int) {
+        binding.homePRBAllPosts.visibility = visible
+    }
+
+    private fun initRecycler() {
+        val adapter = RecyclerPosts(allPost)
+        binding.homeREVPosts.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+        binding.homeREVPosts.adapter = adapter
+
     }
 
     private fun initCallBack() {
@@ -108,6 +108,7 @@ class HomeFragment : Fragment() , GetAllPostCallBack {
         Collections.sort(posts , postComparator())
         this.allPost.addAll(posts)
         binding.homeREVPosts.adapter?.notifyItemRangeInserted(0, posts.size)
+        visibilityProgressBarAllPost(View.GONE)
     }
 
 

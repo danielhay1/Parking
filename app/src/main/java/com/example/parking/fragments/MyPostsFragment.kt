@@ -44,9 +44,12 @@ class MyPostsFragment : Fragment() , GetMyPostsCallBack{
         initRecycler()
         initCallBacks()
         getMyPostsFromDB()
-
+        visibilityProgressBarMyPost(View.VISIBLE)
         return binding.root
     }
+
+
+
 
     private fun getMyPostsFromDB() {
         dbManager.getMyPostsFromDB()
@@ -72,8 +75,11 @@ class MyPostsFragment : Fragment() , GetMyPostsCallBack{
         //Collections.sort(posts , postComparator())
         myPosts.addAll(posts)
         binding.myPostREVPosts.adapter?.notifyItemRangeInserted(0, posts.size)
+        visibilityProgressBarMyPost(View.GONE)
 
     }
-
+    private fun visibilityProgressBarMyPost(visible: Int) {
+        binding.myPostPRBAllPosts.visibility = visible
+    }
 
 }

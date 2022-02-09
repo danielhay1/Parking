@@ -13,9 +13,6 @@ import com.google.firebase.storage.UploadTask
 
 import com.example.parking.InterFaces.GetAllPostCallBack
 import com.example.parking.InterFaces.GetMyPostsCallBack
-import com.example.parking.fragments.MyPostsFragment
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.DocumentSnapshot
 import java.util.*
 
@@ -216,16 +213,18 @@ class DBManager {
             .document(post.docId).get()
             .addOnCompleteListener { task: Task<DocumentSnapshot?> ->
                 if (task.isSuccessful) {
-                    handleDeleteLikeFireStore(task)
+
+                    handleDeleteLikeFireStore(task,post)
                 }
             }
 
     }
 
-    private fun handleDeleteLikeFireStore(task: Task<DocumentSnapshot?>) {
+    private fun handleDeleteLikeFireStore(task: Task<DocumentSnapshot?>, post: Post) {
         val documentSnapshot = task.result!!
-        val updatePost = documentSnapshot.toObject(Post::class.java)
+        var updatePost = documentSnapshot.toObject(Post::class.java)
         if (updatePost != null) {
+            updatePost = post
             updateAllPostInFireStore(updatePost)
             updatePostInMyPostFireStore(updatePost)
         }
