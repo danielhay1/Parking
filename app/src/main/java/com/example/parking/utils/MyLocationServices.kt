@@ -1,11 +1,15 @@
 package com.example.parking.utils
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -46,9 +50,28 @@ class MyLocationServices(private val appContext: Context) {
     }
 
 
-    public fun isGpsEnabled(): Boolean {
+    fun isGpsEnabled(): Boolean {
         //return locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER) ?: false
         return locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+    fun isGpsEnabledRequest(activity: Activity): Boolean {
+        if (!MyLocationServices.getInstance(appContext).isGpsEnabled()) {
+            MySignal.getInstance().alertDialog(activity,
+                "GPS IS DISABLED",
+                "Press \'Enable GPS\' to open gps settings",
+                "Enable GPS",
+                "Cancel",
+                DialogInterface.OnClickListener { dialog, id ->
+                    activity.startActivity(
+                        Intent(
+                            Settings.ACTION_LOCATION_SOURCE_SETTINGS
+                        )
+                    )
+                })
+            return false
+        }
+        return true
     }
 
     private fun setLocationCallBack(locationCallback: LocationCallback) {

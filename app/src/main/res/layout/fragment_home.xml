@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/includeHomeParking"
-        android:progressBackgroundTint="@color/orange" />
+        android:progressBackgroundTint="@color/application_dark_blue" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/home_REV_posts"

@@ -1,6 +1,8 @@
 package com.example.parking.fragments
 
 import android.content.Intent
+import android.content.IntentFilter
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -15,21 +17,41 @@ import com.bumptech.glide.Glide
 import com.example.parking.InterFaces.ImageUriCallBack
 import com.example.parking.R
 import com.example.parking.activities.HomeActivity
+import com.example.parking.databinding.FragmentMapBinding
 import com.example.parking.databinding.FragmentPostBinding
 import com.example.parking.objects.DBManager
 import com.example.parking.objects.Post
+import com.example.parking.receivers.LocationReceiver
 import com.example.parking.utils.AuthUtils
+import com.example.parking.utils.MyLocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.LocationSource
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
 class PostFragment : Fragment() , ImageUriCallBack {
 
+    public interface NewPostCallBack {  //TODO: consider to remove
+        public fun onPostCreated(post: Post)
+    }
+
+    private val LARGE_SCALE = 18
     private lateinit var binding: FragmentPostBinding
    // private val newPostCallBack: newPostCallBack? = null
     private var photoUri: Uri? = null
     private var dbManager: DBManager? = null
     private lateinit var homeActivity: HomeActivity
-   // private val mapManagerPost: MapManagerPost? = null
+    private var locationChangedListener: LocationSource.OnLocationChangedListener? = null
+    private var locationReceiver: LocationReceiver? = null
+    private var myCurrentLatLng : LatLng? = null
+
+
+
+    private val newPostCallback: NewPostCallBack? = null
+
+    //private val mapManagerPost: MapManagerPost? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,17 +62,14 @@ class PostFragment : Fragment() , ImageUriCallBack {
 
 
         initValues()
-      //  activateMap()
+        initMap(inflater,container)
+        //activateMap()
         initListeners()
         initObjects()
         initCallBacks()
 
 
         return binding.root
-
-
-
-
     }
 
     private fun initValues() {
@@ -71,6 +90,7 @@ class PostFragment : Fragment() , ImageUriCallBack {
     private fun initListeners() {
         binding.cameraIcon.setOnClickListener(takePhotoParking)
         binding.postBtn.setOnClickListener(postBtn)
+
     }
 
 
@@ -186,10 +206,104 @@ class PostFragment : Fragment() , ImageUriCallBack {
             .into(binding.imageParking)
     }
 
+    private fun initMap(inflater: LayoutInflater,container: ViewGroup?) {
+        var supportMapFragment = FragmentPostBinding.inflate(inflater, container, false)
+        supportMapFragment?.let {
+            val supportMapFragment = childFragmentManager.findFragmentById(it.map.id) as SupportMapFragment?
+            supportMapFragment?.let{
+                it.getMapAsync { map -> //When map is loaded
+                    Log.d("post_fragment", "Map ready: ")
+                    if(MyLocationServices.getInstance(requireContext()).checkLocationPermission()) {    // check permission
+                        if(MyLocationServices.getInstance(requireContext()).isGpsEnabledRequest(requireActivity())) {   //  check GPS enabled
+                            map.setMyLocationEnabled(true)
+                            setLocationSource(map)
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setLocationSource(map: GoogleMap) {
+        Log.d("post_fragment", "setLocationSource: ")
+        map.setLocationSource(object : LocationSource {
+            override fun activate(onLocationChangedListener: LocationSource.OnLocationChangedListener) {
+                locationChangedListener = onLocationChangedListener
+                registerLocationReceiver(map)
+                Log.d("post_fragment", "activate: Tracking location")
+            }
+
+            override fun deactivate() {
+                locationChangedListener = null
+                Log.d("post_fragment", "deactivate: stop tracking location")
+                MyLocationServices.getInstance(requireContext()).stopLocationUpdate(object :
+                    MyLocationServices.CallBack_Location {
+                    override fun locationReady(location: Location?) {
+                        unRegisterLocationReceiver(locationReceiver)
+                    }
+
+                    override fun onError(error: String?) {
+                        Log.d("post_fragment", "onError: $error")
+                    }
+                })
+            }
+        })
+    }
+
+    private fun registerLocationReceiver(map: GoogleMap) {
+        locationReceiver = LocationReceiver(object : LocationReceiver.CallBack_LatLngUpdate {
+            override fun latLngUpdate(latLng: LatLng?) {
+                latLng?.let {
+                    val location = Location("")
+                    location.latitude = it.latitude
+                    location.longitude = it.longitude
+                    locationChangedListener?.onLocationChanged(location)
+                    if (myCurrentLatLng == null) {
+                        myCurrentLatLng = it
+                        setFocus(map, it, LARGE_SCALE.toFloat())
+                    } else {
+                        myCurrentLatLng = it
+                    }
+                    Log.d("post_fragment", "latLngUpdate: ${myCurrentLatLng}")
+                }
+            }
+        })
+
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(LocationReceiver.CURRENT_LOCATION)
+        this.requireActivity().registerReceiver(locationReceiver, intentFilter)
+        if(MyLocationServices.getInstance(requireContext()).checkLocationPermission()) {
+            Log.d("post_fragment", "registerLocationReceiver: mapSetLocationEnabled")
+        }
+
+    }
+
+    private fun unRegisterLocationReceiver(locationReceiver: LocationReceiver?) {
+        locationReceiver?.let { this.requireActivity().unregisterReceiver(it) }
+
+    }
+
+    fun setFocus(map: GoogleMap,focusLatlng: LatLng?, scale: Float) {
+        val center = CameraUpdateFactory.newLatLng(focusLatlng!!)
+        if (focusLatlng == null) {
+            Log.d("post_fragment", "setFocus: NULL")
+        } else {
+            Log.d(
+                "post_fragment",
+                "setFocus: \tLatlng= " + focusLatlng.toString() + "Zoom scale=" + scale
+            )
+            val zoom = CameraUpdateFactory.zoomTo(scale)
+            map.moveCamera(center)
+            map.animateCamera(zoom)
+        }
+    }
+
 //     activate map with current location
 //    private fun activateMap() {
 //        val supportMapFragment =
 //            this.childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+//
 //        mapManagerPost = MapManagerPost(context!!.applicationContext, supportMapFragment)
 //        mapManagerPost.activateMapWithCurrentLocation()
 //    }
@@ -205,7 +319,20 @@ class PostFragment : Fragment() , ImageUriCallBack {
         val post: Post = getNewPostObject(imageUri)
         dbManager?.saveNewPostInFireStore(post)
     }
-    
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("post_fragment", "POST FRAGMENT- onStop: ")
+        //registerLocationReceiver()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("post_fragment", "POST FRAGMENT- onStop: ")
+        unRegisterLocationReceiver(locationReceiver)
+    }
+
+
 //    fun initNewPOstFragmentCallBack(newPostCallBack: newPostCallBack?) {
 //        this.newPostCallBack = newPostCallBack
 //    }

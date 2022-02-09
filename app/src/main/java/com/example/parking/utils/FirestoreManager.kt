@@ -40,18 +40,14 @@ class FirestoreManager() {
         db = FirebaseFirestore.getInstance()
     }
 
-    fun getUserFromFireStore(userReadyCallback: UserReadyCallback) {
-
-
-        AuthUtils.getCurrentUser()?.let {
-            Log.d("firestore_manager", "getUserFromFireStore: uid=$it")
-            db?.collection(USERS)?.document(it)?.get()?.addOnCompleteListener { task: Task<DocumentSnapshot> ->
-                if (task.isSuccessful) {
-                    val documentSnapshot = task.result
-                    val user = documentSnapshot.toObject(User::class.java)
-                    if (userReadyCallback != null) {
-                        user?.let { it1 -> userReadyCallback.onUserReady(it1) }
-                    }
+    fun getUserFromFireStore(uid: String, userReadyCallback: UserReadyCallback) {
+        Log.d("firestore_manager", "getUserFromFireStore: uid=$uid")
+        db?.collection(USERS)?.document(uid)?.get()?.addOnCompleteListener { task: Task<DocumentSnapshot> ->
+            if (task.isSuccessful) {
+                val documentSnapshot = task.result
+                val user = documentSnapshot.toObject(User::class.java)
+                if (userReadyCallback != null) {
+                    user?.let { it1 -> userReadyCallback.onUserReady(it1) }
                 }
             }
         }
@@ -98,8 +94,8 @@ class FirestoreManager() {
         })
     }
 
-    fun getUserPhotoFromFireStore(currentUserImageCallBack: CurrentUserImageCallBack) {
-        db!!.collection(USERS).document(AuthUtils.getCurrentUser()!!).get()
+    fun getUserPhotoFromFireStore(uid: String,currentUserImageCallBack: CurrentUserImageCallBack) {
+        db!!.collection(USERS).document(uid).get()
             .addOnCompleteListener { task: Task<DocumentSnapshot> ->
                 if (task.isSuccessful) {
                     val result = task.result

@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.Parking" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/application_dark_blue</item>
+        <item name="colorPrimaryVariant">@color/application_dark_blue</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -17,7 +17,7 @@
     <style name="myTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="android:textSize">70sp</item>
 
-        <item name="android:textColorHint">@color/orange</item>
+        <item name="android:textColorHint">@color/application_dark_blue</item>
         <item name="boxCornerRadiusTopStart">15dp</item>
         <item name="boxCornerRadiusBottomStart">15dp</item>
         <item name="boxCornerRadiusTopEnd">15dp</item>
@@ -30,7 +30,7 @@
     </style>
 
     <style name="CustomToolBar" parent="Widget.MaterialComponents.Toolbar">
-        <item name="titleTextColor">@color/orange</item>
+        <item name="titleTextColor">@color/application_dark_blue</item>
         <item name="titleTextAppearance">@style/Toolbar.TitleText</item>
 
 
@@ -39,14 +39,14 @@
     <style name="Toolbar.TitleText" parent="TextAppearance.MaterialComponents.Headline5" />
 
     <style name="CustomToolbarPrimary" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
-        <item name="colorOnPrimary">@color/orange</item>
-        <item name="colorSecondary">@color/orange</item>
+        <item name="colorOnPrimary">@color/application_dark_blue</item>
+        <item name="colorSecondary">@color/application_dark_blue</item>
         <!--Changes the color of text-->
         <item name="theme">@style/searchViewTheme</item>
 
     </style>
     <style name="searchViewTheme" parent="Widget.AppCompat.Light.SearchView">
-        <item name="android:editTextColor">@color/orange</item>
+        <item name="android:editTextColor">@color/application_dark_blue</item>
         <item name="iconifiedByDefault">false</item>
         <item name="searchIcon">@null</item>
         <item name="searchViewStyle">@null</item>

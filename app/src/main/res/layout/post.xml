@@ -24,10 +24,10 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="380dp"
+                    android:layout_height="587dp"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_margin="12dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -37,7 +37,7 @@
                         android:layout_marginTop="12dp"
                         android:orientation="horizontal">
 
-                        <ImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/post_IMG_UserImage"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
@@ -86,13 +86,12 @@
                             android:scaleType="centerCrop" />
 
                         <com.google.android.gms.maps.MapView
-                            android:layout_marginTop="10dp"
                             android:id="@+id/map"
                             android:layout_width="match_parent"
                             android:layout_height="120dp"
-                            tools:context=".MapsActivity"
-                            android:enabled="true">
-                        </com.google.android.gms.maps.MapView>
+                            android:layout_marginTop="10dp"
+                            android:enabled="true"
+                            tools:context=".MapsActivity"></com.google.android.gms.maps.MapView>
 
                         <LinearLayout
                             android:id="@+id/layLike"
@@ -104,9 +103,8 @@
 
                             <com.like.LikeButton
                                 android:id="@+id/likeBtn"
-                                android:layout_width="28dp"
-                                android:layout_height="30dp"
-                                android:layout_marginTop="2dp"
+                                android:layout_width="25dp"
+                                android:layout_height="match_parent"
                                 app:anim_scale_factor="2.5"
                                 app:dots_primary_color="@color/orange"
                                 app:dots_secondary_color="@color/orange"
@@ -139,16 +137,16 @@
                                 android:textColor="@color/gray"
                                 android:textSize="17sp" />
 
-                            <TextView
-                                android:id="@+id/kindOfParking"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginStart="10dp"
-                                android:gravity="right"
-                                android:textColor="@color/orange"
-                                android:textSize="17sp"
-                                android:textStyle="bold" />
+<!--                            <TextView-->
+<!--                                android:id="@+id/kindOfParking"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_alignParentEnd="true"-->
+<!--                                android:layout_marginStart="10dp"-->
+<!--                                android:gravity="right"-->
+<!--                                android:textColor="@color/orange"-->
+<!--                                android:textSize="17sp"-->
+<!--                                android:textStyle="bold" />-->
 
                         </LinearLayout>
                     </LinearLayout>

@@ -17,9 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/share_empty_parking"
-            android:textColor="@color/orange"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:textColor="@color/application_dark_blue"
+            android:textSize="24sp" />
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -32,13 +31,13 @@
             android:hint="@string/enter_location"
             android:textColorHint="@color/light_gray"
             app:helperTextTextColor="@color/red"
-            app:hintTextColor="@color/orange">
+            app:hintTextColor="@color/application_dark_blue">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textColor="@color/orange" />
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -51,14 +50,14 @@
             android:layout_marginTop="50dp"
             android:hint="@string/more_info"
             android:textColorHint="@color/light_gray"
-            app:hintTextColor="@color/orange">
+            app:hintTextColor="@color/application_dark_blue">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top"
                 android:lines="3"
-                android:textColor="@color/orange" />
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,11 +103,11 @@
 
                     <ImageView
                         android:id="@+id/cameraIcon"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
                         android:layout_centerInParent="true"
                         android:background="@drawable/photo_icon"
-                        android:backgroundTint="@color/orange"
+                        android:backgroundTint="@color/application_dark_blue"
                         android:contentDescription="@string/icon_camera" />
 
 
@@ -133,16 +132,18 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/postBtn"
-            android:layout_width="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/textMoreInfo"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
-            android:background="@color/orange"
             android:padding="20dp"
             android:text="@string/post"
-            android:textSize="20sp"
-            app:backgroundTint="@null" />
+            android:textSize="16sp"
+            android:textColor="@color/application_dark_blue"
+            app:cornerRadius="50dp"
+            app:strokeColor="@color/application_dark_blue" />
 
     </RelativeLayout>
 </ScrollView>

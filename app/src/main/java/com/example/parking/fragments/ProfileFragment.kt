@@ -1,7 +1,6 @@
 package com.example.parking.fragments
 
 import android.Manifest
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -53,12 +52,18 @@ class ProfileFragment : Fragment() {
         binding = FragmentProfileBinding.inflate(layoutInflater)
         initViews()
         displayUserDetails()
-        FirestoreManager().getUserPhotoFromFireStore(object: FirestoreManager.CurrentUserImageCallBack{
-            override fun currentUserImageCallBack(photo: String?) {
-                photo?.let {setImageUserWithUriGlide(it)}
-            }
+        AuthUtils.getCurrentUser()?.let {
+            FirestoreManager().getUserPhotoFromFireStore(it,object: FirestoreManager.CurrentUserImageCallBack{
+                override fun currentUserImageCallBack(photo: String?) {
+                    photo?.let {
+                        if(!it.equals("")) {
+                            setImageUserWithUriGlide(it)
+                        }
+                    }
+                }
+            })
+        }
 
-        })
         return binding?.root
     }
 
@@ -72,14 +77,16 @@ class ProfileFragment : Fragment() {
     }
 
     private fun displayUserDetails() {
-        FirestoreManager().getUserFromFireStore(object :
-            FirestoreManager.UserReadyCallback {
-            override fun onUserReady(user: User) {
-                binding.profileTVUsername.text = user.fullName
-                binding.profileTVEmail.text = user.email
-                Log.d("profile_fragment", "onUserReady: user: $user updated!")
-            }
-        })
+        AuthUtils.getCurrentUser()?.let {
+            FirestoreManager().getUserFromFireStore(it,object :
+                FirestoreManager.UserReadyCallback {
+                override fun onUserReady(user: User) {
+                    binding.profileTVUsername.text = user.fullName
+                    binding.profileTVEmail.text = user.email
+                    Log.d("profile_fragment", "onUserReady: user: $user updated!")
+                }
+            })
+        }
     }
 
     private fun checkPermission(): Boolean {

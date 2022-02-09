@@ -58,7 +58,7 @@ class HomeActivity : AppCompatActivity() {
             requestPermission()
 
         }
-        gpsEnabled = isGpsEnabled()
+        gpsEnabled = MyLocationServices.getInstance(this).isGpsEnabledRequest(this)
         EnableMyLocationServices()
 
 
@@ -110,26 +110,6 @@ class HomeActivity : AppCompatActivity() {
             ), MY_PERMISSIONS_REQUEST_LOCATION
         )
     }
-
-    private fun isGpsEnabled(): Boolean {
-        if (!MyLocationServices.getInstance(this.applicationContext).isGpsEnabled()) {
-            MySignal.getInstance().alertDialog(this,
-                "GPS IS DISABLED",
-                "Press \'Enable GPS\' to open gps settings",
-                "Enable GPS",
-                "Cancel",
-                DialogInterface.OnClickListener { dialog, id ->
-                    this.startActivity(
-                        Intent(
-                            Settings.ACTION_LOCATION_SOURCE_SETTINGS
-                        )
-                    )
-                })
-            return false
-        }
-        return true
-    }
-
 
     override fun onStart() {
         super.onStart()
