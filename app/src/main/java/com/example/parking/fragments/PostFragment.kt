@@ -62,7 +62,7 @@ class PostFragment : Fragment() , ImageUriCallBack {
 
 
         initValues()
-       // initMap(inflater,container)
+        initMap(inflater,container)
         //activateMap()
         initListeners()
         initObjects()
@@ -148,10 +148,10 @@ class PostFragment : Fragment() , ImageUriCallBack {
             post.currentUserId = AuthUtils.getCurrentUser().toString()
             post.docId = System.currentTimeMillis().toString()
 
-//        if (mapManagerPost.getLocation() != null) {
-//            post.setLatitude(java.lang.String.valueOf(mapManagerPost.getLocation().getLatitude()))
-//            post.setLongitude(java.lang.String.valueOf(mapManagerPost.getLocation().getLongitude()))
-//        }
+        myCurrentLatLng?.let {
+            post.latitude = it.latitude.toString()
+            post.longitude = it.longitude.toString()
+        }
         return post
     }
 
@@ -240,7 +240,7 @@ class PostFragment : Fragment() , ImageUriCallBack {
                 MyLocationServices.getInstance(requireContext()).stopLocationUpdate(object :
                     MyLocationServices.CallBack_Location {
                     override fun locationReady(location: Location?) {
-                        unRegisterLocationReceiver(locationReceiver)
+                        unRegisterLocationReceiver()
                     }
 
                     override fun onError(error: String?) {
@@ -279,9 +279,32 @@ class PostFragment : Fragment() , ImageUriCallBack {
 
     }
 
-    private fun unRegisterLocationReceiver(locationReceiver: LocationReceiver?) {
-        locationReceiver?.let { this.requireActivity().unregisterReceiver(it) }
+    private fun registerLocationReceiver() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(LocationReceiver.CURRENT_LOCATION)
+        try {
+            this.requireContext().registerReceiver(locationReceiver, intentFilter)
+            //LocalBroadcastManager.getInstance(requireContext()).registerReceiver(locationReceiver!!, intentFilter)
+            Log.d("map_fragment", "registerLocationReceiver: $locationReceiver")
 
+        }   catch (e: IllegalArgumentException) {
+            // already registered
+            Log.e("map_fragment", "registerLocationReceiver: LocationReceiver already register")
+        }
+
+    }
+
+    private fun unRegisterLocationReceiver() {
+        locationReceiver?.let {
+            try {
+                this.requireContext().unregisterReceiver(it)
+                //LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(it)
+                Log.d("map_fragment", "unRegisterLocationReceiver: LocationListener unregistered.")
+            } catch (e: IllegalArgumentException) {
+                Log.e("map_fragment", "unRegisterLocationReceiver: unRegisterLocationReceiver call before registerLocationReceiver")
+
+            }
+        }
     }
 
     fun setFocus(map: GoogleMap,focusLatlng: LatLng?, scale: Float) {
@@ -299,15 +322,6 @@ class PostFragment : Fragment() , ImageUriCallBack {
         }
     }
 
-//     activate map with current location
-//    private fun activateMap() {
-//        val supportMapFragment =
-//            this.childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-//
-//        mapManagerPost = MapManagerPost(context!!.applicationContext, supportMapFragment)
-//        mapManagerPost.activateMapWithCurrentLocation()
-//    }
-
     // get image uri callBack to save in post
     override fun imageUriCallBack(imageUri: String) {
         Log.d("DSFfdfd" , "Dfdssfd" + imageUri)
@@ -323,20 +337,22 @@ class PostFragment : Fragment() , ImageUriCallBack {
     override fun onStart() {
         super.onStart()
         Log.d("post_fragment", "POST FRAGMENT- onStop: ")
-        //registerLocationReceiver()
     }
 
-//    override fun onStop() {
-//        super.onStop()
-//        Log.d("post_fragment", "POST FRAGMENT- onStop: ")
-//        unRegisterLocationReceiver(locationReceiver)
-//    }
+    override fun onStop() {
+        super.onStop()
+        Log.d("post_fragment", "POST FRAGMENT- onStop: ")
+    }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("map_fragment", "MAP FRAGMENT- onResume: ")
+        registerLocationReceiver()
+    }
 
-//    fun initNewPOstFragmentCallBack(newPostCallBack: newPostCallBack?) {
-//        this.newPostCallBack = newPostCallBack
-//    }
-
-
-
+    override fun onPause() {
+        super.onPause()
+        Log.d("map_fragment", "MAP FRAGMENT- onPause: ")
+        unRegisterLocationReceiver()
+    }
 }
