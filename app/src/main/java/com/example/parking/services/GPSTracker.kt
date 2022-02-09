@@ -36,6 +36,13 @@ class GPSTracker : Service() {
         }
     }
 
+
+    override fun onCreate() {
+        super.onCreate()
+        Log.d("gps_tracker", "onCreate: ")
+    }
+
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("gps_tracker", "onStartCommand")
         super.onStartCommand(intent, flags, startId)
@@ -83,14 +90,17 @@ class GPSTracker : Service() {
     }
 
     override fun onBind(p0: Intent?): IBinder? {
+        Log.d("gps_tracker", "onBind: ")
         return null
     }
 
     override fun stopService(name: Intent?): Boolean {
+        Log.d("gps_tracker", "stopService: ")
         return super.stopService(name)
     }
 
     override fun onDestroy() {
+        Log.d("gps_tracker", "onDestroy: ")
         super.onDestroy()
         stopUpdateCurrentLocation()
     }

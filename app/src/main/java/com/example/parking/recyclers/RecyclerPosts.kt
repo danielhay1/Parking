@@ -1,5 +1,7 @@
 package com.example.parking.recyclers
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -18,16 +20,20 @@ import com.example.parking.utils.AuthUtils
 import com.example.parking.utils.FirestoreManager
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.like.LikeButton
 import com.like.OnLikeListener
 import java.math.RoundingMode.valueOf
 
-class RecyclerPosts(var postList: ArrayList<Post>) : RecyclerView.Adapter<RecyclerPosts.ViewHolder>() {
+class RecyclerPosts(var postList: ArrayList<Post>,private var navigateBtnCallback: NavigateBtnCallback) : RecyclerView.Adapter<RecyclerPosts.ViewHolder>() {
 
+    interface NavigateBtnCallback {
+        fun onNavigateBtnClick(latLng: LatLng)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = PostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding,navigateBtnCallback)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -41,9 +47,8 @@ class RecyclerPosts(var postList: ArrayList<Post>) : RecyclerView.Adapter<Recycl
 
 
     //the class is hodling the list view
-    class ViewHolder(private var binding: PostBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private var binding: PostBinding,private var navigateBtnCallback: NavigateBtnCallback) : RecyclerView.ViewHolder(binding.root) {
         private val dbManager = DBManager()
-
         fun bindItems(post: Post) {
             binding.POSTTVTitle.text = post.locationParking
             setImageUserWithUriGlide(post.imageParking, binding.POSTIMGParking)
@@ -54,6 +59,10 @@ class RecyclerPosts(var postList: ArrayList<Post>) : RecyclerView.Adapter<Recycl
             binding.amountOfLikes.text = post.numLiking.toString()
             isCurrentUserMakeLike(binding.POSTTVLikes,binding.likeBtn, post)
             likeBtnListener(binding.amountOfLikes, binding.POSTTVLikes, binding.likeBtn, post)
+            binding.postBTNNavigate.setOnClickListener({
+                var latLng: LatLng = LatLng(post.latitude.toDouble(),post.longitude.toDouble())
+                navigateBtnCallback.onNavigateBtnClick(latLng)
+            })
 
         }
 
@@ -96,7 +105,7 @@ class RecyclerPosts(var postList: ArrayList<Post>) : RecyclerView.Adapter<Recycl
         private fun likeBtnListener(textViewNumLikes: TextView, textViewLike: TextView , likeBtn:LikeButton, post: Post) {
             likeBtn.setOnLikeListener(object : OnLikeListener {
                 override fun liked(likeButton: LikeButton) {
-                    textViewLike.setTextColor(ContextCompat.getColor(textViewLike.context,R.color.orange))
+                    textViewLike.setTextColor(ContextCompat.getColor(textViewLike.context,R.color.application_dark_blue))
                     post.numLiking += 1
                     AuthUtils.getCurrentUser()?.let { post.addWhoMakeLike(it) }
                     dbManager.updateLike(post)
@@ -129,10 +138,19 @@ class RecyclerPosts(var postList: ArrayList<Post>) : RecyclerView.Adapter<Recycl
                 likeBtn.isLiked = false
             }
         }
+
+        private fun navigate(source: LatLng?, dest: LatLng?) : Boolean {
+            if(source!=null && dest!=null) {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("http://maps.google.com/maps?saddr="+source.latitude+","+source.longitude+"&daddr="+dest.latitude+","+dest.longitude)
+                )
+                //startActivity(intent)
+                return true
+            }   else {
+                return false
+            }
+
+        }
     }
-
-
-
-
-
 }

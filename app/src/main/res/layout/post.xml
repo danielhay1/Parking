@@ -26,11 +26,7 @@
                 <LinearLayout
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_margin="5dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -82,7 +78,7 @@
                         <ImageView
                             android:id="@+id/POST_IMG_Parking"
                             android:layout_width="match_parent"
-                            android:layout_height="250dp"
+                            android:layout_height="225dp"
                             android:layout_below="@+id/textMoreInfo"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="10dp"
@@ -91,7 +87,7 @@
                         <com.google.android.gms.maps.MapView
                             android:id="@+id/map"
                             android:layout_width="match_parent"
-                            android:layout_height="120dp"
+                            android:layout_height="110dp"
                             android:layout_marginTop="10dp"
                             android:enabled="true"
                             tools:context=".MapsActivity" />
@@ -139,9 +135,18 @@
                                 android:textColor="@color/gray"
                                 android:textSize="17sp" />
 
-
-
                         </LinearLayout>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/post_BTN_navigate"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:gravity="center"
+                            android:text="Navigate"
+                            android:textColor="@color/application_dark_blue"
+                            app:cornerRadius="50dp"
+                            app:strokeColor="@color/application_dark_blue" />
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>

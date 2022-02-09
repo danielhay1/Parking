@@ -8,14 +8,18 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.startActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
+
 
 class MyLocationServices(private val appContext: Context) {
     private var req: LocationRequest? = null
@@ -35,23 +39,18 @@ class MyLocationServices(private val appContext: Context) {
             if (instance == null) {
                 instance = MyLocationServices(context.applicationContext)   // Avoid leaking activites
                 locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
+                    context
+                )
 
             }
             return instance as MyLocationServices
         }
 
     }
-    init {
-//        if (!isGpsEnabled()) {
-//            //GPS is not enabled !!
-//            Log.d("pttt", "GPS is not enabled")
-//        }
-    }
 
 
     fun isGpsEnabled(): Boolean {
-        //return locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER) ?: false
         return locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
@@ -78,7 +77,10 @@ class MyLocationServices(private val appContext: Context) {
         this.locationCallback = locationCallback
     }
 
-    fun startLocationUpdateds(callBack_location: CallBack_Location?,locationCallback: LocationCallback?) {
+    fun startLocationUpdateds(
+        callBack_location: CallBack_Location?,
+        locationCallback: LocationCallback?
+    ) {
         if (!checkLocationPermission()) {
             callBack_location?.onError("LOCATION PERMISSION IS NOT ALLOW")
             return
@@ -129,7 +131,7 @@ class MyLocationServices(private val appContext: Context) {
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
                 == PackageManager.PERMISSION_GRANTED)
-        Log.d("pttt", "permission=$res")
+        Log.d("my_location_services", "permission=$res")
         return res
     }
 
@@ -153,6 +155,27 @@ class MyLocationServices(private val appContext: Context) {
         } else {
             callBack_location.onError("Location update not requested")
         }
+    }
+
+    fun navigate(activity: Activity,dest: LatLng) {
+        /**
+         * Method sample current location and use callBack_location when location is ready
+         */
+        setLastBestLocation(object : CallBack_Location {
+            override fun locationReady(location: Location?) {
+                location?.let {
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?saddr=" + it.latitude + "," + it.longitude + "&daddr=" + dest.latitude + "," + dest.longitude)
+                    )
+                    activity.startActivity(intent)
+                }
+            }
+
+            override fun onError(error: String?) {
+                Log.e("my_location_services", "onError: $error" )
+            }
+        })
     }
 
 

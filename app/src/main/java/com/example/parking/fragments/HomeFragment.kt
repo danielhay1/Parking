@@ -19,6 +19,8 @@ import com.example.parking.databinding.FragmentHomeBinding
 import com.example.parking.objects.DBManager
 import com.example.parking.objects.Post
 import com.example.parking.recyclers.RecyclerPosts
+import com.example.parking.utils.MyLocationServices
+import com.google.android.gms.maps.model.LatLng
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -56,11 +58,15 @@ class HomeFragment : Fragment() , GetAllPostCallBack {
         binding.homePRBAllPosts.visibility = visible
     }
 
+
     private fun initRecycler() {
-        val adapter = RecyclerPosts(allPost)
+        val adapter = RecyclerPosts(allPost,object : RecyclerPosts.NavigateBtnCallback {
+            override fun onNavigateBtnClick(latLng: LatLng) {
+                MyLocationServices.getInstance(requireContext()).navigate(requireActivity(),latLng)
+            }
+        })
         binding.homeREVPosts.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         binding.homeREVPosts.adapter = adapter
-
     }
 
     private fun initCallBack() {

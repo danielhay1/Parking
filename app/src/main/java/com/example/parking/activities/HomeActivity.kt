@@ -44,7 +44,9 @@ class HomeActivity : AppCompatActivity() {
     private var gpsEnabled = false
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
+
     val fm: FragmentManager = supportFragmentManager
+    // fragments:
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,10 +62,6 @@ class HomeActivity : AppCompatActivity() {
         }
         gpsEnabled = MyLocationServices.getInstance(this).isGpsEnabledRequest(this)
         EnableMyLocationServices()
-
-
-        //  addToBackStack()
-
 
     }
 

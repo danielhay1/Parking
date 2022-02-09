@@ -46,7 +46,8 @@
 
         </activity>
 
-        <service android:name=".services.GPSTracker" />
+        <service android:name=".services.GPSTracker"
+            android:process=":GPSTrackerProcess"/>
     </application>
 
 </manifest>

@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.parking.databinding.FragmentMapBinding
 import com.example.parking.objects.Post
 import com.example.parking.receivers.LocationReceiver
@@ -42,10 +43,24 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
     private lateinit var binding: FragmentMapBinding
     private var gMap: GoogleMap? = null
     private var locationChangedListener: OnLocationChangedListener? = null
-    private var locationReceiver: LocationReceiver? = null
     private var myCurrentLatLng : LatLng? = null
     private var autoFocusCurrentLocation = false
 
+    private var locationReceiver = LocationReceiver(object : LocationReceiver.CallBack_LatLngUpdate {
+        override fun latLngUpdate(latLng: LatLng?) {
+            latLng?.let {
+                val location = Location("")
+                location.latitude = it.latitude
+                location.longitude = it.longitude
+                locationChangedListener?.onLocationChanged(location)
+                myCurrentLatLng = it
+                Log.d("map_fragment", "latLngUpdate: ${myCurrentLatLng}")
+                if (autoFocusCurrentLocation) {
+                    setFocus(myCurrentLatLng, NORMAL_SCALE.toFloat())
+                }
+            }
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +70,8 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d("map_fragment", "onCreateView:")
+        //initLocationListener()
         binding = FragmentMapBinding.inflate(layoutInflater)
         // Inflate the layout for this fragment
         var supportMapFragment = FragmentMapBinding.inflate(inflater, container, false)
@@ -64,8 +81,8 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
                 it.getMapAsync { map -> //When map is loaded
                     gMap = map
                     Log.d("map_fragment", "Map ready: ")
+                    initViews(map)
                     initMapFragment()
-                    initViews()
                     initAllPosts()
                 }
             }
@@ -77,17 +94,13 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
         gMap?.let {
             if (MyLocationServices.getInstance(this.requireActivity()).isGpsEnabledRequest(this.requireActivity())) {
                 Log.d("map_fragment", "initMapFragment: gpsEnabled")
-                it.setOnMarkerClickListener {
-                    var markerLatLng = LatLng(it.position.latitude,it.position.longitude)
-                    navigate(myCurrentLatLng,markerLatLng)
-                }
                 setupMap(it)
                 setLocationSource(it)   //TODO: DEBUG
             }
         }
     }
 
-    private fun initViews() {
+    private fun initViews(map: GoogleMap) {
         binding.mapBTNFollowMyCurrentLocation.setOnClickListener {
             autoFocusCurrentLocation = !autoFocusCurrentLocation
             Log.d("map_fragment", "autoFocusCurrentLocation = $autoFocusCurrentLocation")
@@ -99,7 +112,29 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
                     .loadImg("icon_mylocation_focus", it as ImageView)
             }
         }
+        map.setOnMarkerClickListener {
+            var markerLatLng = LatLng(it.position.latitude,it.position.longitude)
+            navigate(myCurrentLatLng,markerLatLng)
+        }
 
+    }
+
+    private fun initLocationListener() {
+        locationReceiver = LocationReceiver(object : LocationReceiver.CallBack_LatLngUpdate {
+            override fun latLngUpdate(latLng: LatLng?) {
+                latLng?.let {
+                    val location = Location("")
+                    location.latitude = it.latitude
+                    location.longitude = it.longitude
+                    locationChangedListener?.onLocationChanged(location)
+                    myCurrentLatLng = it
+                    Log.d("map_fragment", "latLngUpdate: ${myCurrentLatLng}")
+                    if (autoFocusCurrentLocation) {
+                        setFocus(myCurrentLatLng, NORMAL_SCALE.toFloat())
+                    }
+                }
+            }
+        })
     }
 
     fun addMarkerToMap(
@@ -112,7 +147,7 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
          * add marker to map, receive map, latlang and icon to set for marker and set it on map.
          * if marker received is null use default marker icon.
          */
-        Log.d("pttt", "addMarkerToMap: (title=$titleName), (LatLng=$currentLocation)")
+        Log.d("map_fragment", "addMarkerToMap: (title=$titleName), (LatLng=$currentLocation)")
         val marker = MarkerOptions()
                 .position(LatLng(currentLocation.latitude, currentLocation.longitude))
                 .title(titleName)
@@ -130,7 +165,7 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
         map.setLocationSource(object : LocationSource {
             override fun activate(onLocationChangedListener: OnLocationChangedListener) {
                 locationChangedListener = onLocationChangedListener
-                registerLocationReceiver()
+                //registerLocationReceiver()
                 Log.d("map_fragment", "activate: Tracking location")
             }
 
@@ -140,7 +175,7 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
                 MyLocationServices.getInstance(requireContext()).stopLocationUpdate(object :
                     MyLocationServices.CallBack_Location {
                     override fun locationReady(location: Location?) {
-                        unRegisterLocationReceiver(locationReceiver)
+                        //unRegisterLocationReceiver()
                     }
 
                     override fun onError(error: String?) {
@@ -197,36 +232,35 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
             Log.d("map_fragment", "locationReady: setMyLocationTrue")
             map.setMyLocationEnabled(true)
             initCurrentLocation()
-
         }
     }
 
     private fun registerLocationReceiver() {
-        Log.d("map_fragment", "registerLocationReceiver: ")
-        locationReceiver = LocationReceiver(object : LocationReceiver.CallBack_LatLngUpdate {
-            override fun latLngUpdate(latLng: LatLng?) {
-                latLng?.let {
-                    val location = Location("")
-                    location.latitude = it.latitude
-                    location.longitude = it.longitude
-                    locationChangedListener?.onLocationChanged(location)
-                    myCurrentLatLng = it
-                    Log.d("map_fragment", "latLngUpdate: ${myCurrentLatLng}")
-                    if (autoFocusCurrentLocation) {
-                        setFocus(myCurrentLatLng, NORMAL_SCALE.toFloat())
-                    }
-                }
-            }
-        })
-
         val intentFilter = IntentFilter()
         intentFilter.addAction(LocationReceiver.CURRENT_LOCATION)
-        this.requireActivity().registerReceiver(locationReceiver, intentFilter)
+        try {
+            this.requireContext().registerReceiver(locationReceiver, intentFilter)
+            //LocalBroadcastManager.getInstance(requireContext()).registerReceiver(locationReceiver!!, intentFilter)
+            Log.d("map_fragment", "registerLocationReceiver: $locationReceiver")
+
+        }   catch (e: IllegalArgumentException) {
+            // already registered
+            Log.e("map_fragment", "registerLocationReceiver: LocationReceiver already register")
+        }
+
     }
 
-    private fun unRegisterLocationReceiver(locationReceiver: LocationReceiver?) {
-        locationReceiver?.let { this.requireActivity().unregisterReceiver(it) }
+    private fun unRegisterLocationReceiver() {
+        locationReceiver?.let {
+            try {
+                this.requireContext().unregisterReceiver(it)
+                //LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(it)
+                Log.d("map_fragment", "unRegisterLocationReceiver: LocationListener unregistered.")
+            } catch (e: IllegalArgumentException) {
+                Log.e("map_fragment", "unRegisterLocationReceiver: unRegisterLocationReceiver call before registerLocationReceiver")
 
+            }
+        }
     }
 
     private fun addPostToMap(post: Post) {
@@ -264,17 +298,38 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
 
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d("map_fragment", "POST FRAGMENT- onStart: ")
-        gMap?.let { registerLocationReceiver() }
+//    override fun onStart() {
+//        super.onStart()
+//        Log.d("map_fragment", "POST FRAGMENT- onStart: ")
+//        gMap?.let { registerLocationReceiver() }
+//    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("map_fragment", "MAP FRAGMENT- onDestroy: ")
     }
 
 
     override fun onStop() {
         super.onStop()
         Log.d("map_fragment", "MAP FRAGMENT- onStop: ")
-        unRegisterLocationReceiver(locationReceiver)
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("map_fragment", "MAP FRAGMENT- onStart: ")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("map_fragment", "MAP FRAGMENT- onResume: ")
+        registerLocationReceiver()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("map_fragment", "MAP FRAGMENT- onPause: ")
+        unRegisterLocationReceiver()
     }
 
     override fun onPostCreated(post: Post) {
