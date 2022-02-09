@@ -1,11 +1,13 @@
 package com.example.parking.fragments
 
+import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -15,7 +17,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.example.parking.databinding.FragmentMapBinding
+import com.example.parking.objects.Post
 import com.example.parking.receivers.LocationReceiver
+import com.example.parking.utils.FirestoreManager
 import com.example.parking.utils.ImgLoader
 import com.example.parking.utils.MyLocationServices
 import com.example.parking.utils.MySignal
@@ -30,25 +34,21 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 
-class mapFragment : Fragment() {
+class mapFragment : Fragment(), PostFragment.NewPostCallBack {
+
+    private val NORMAL_SCALE = 16
+    private val PARKING_ICON = "car_png_marker"
+
     private lateinit var binding: FragmentMapBinding
     private var gMap: GoogleMap? = null
     private var locationChangedListener: OnLocationChangedListener? = null
     private var locationReceiver: LocationReceiver? = null
     private var myCurrentLatLng : LatLng? = null
-    private val NORMAL_SCALE = 16
     private var autoFocusCurrentLocation = false
 
 
-    public interface NewPostCallBack {  // TODO: Transfer to post fragment
-        public fun onPostCreated(latLng: LatLng, notes: String)  //TODO: need to be adjust to post
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    }
-
-    init {
-
     }
 
     override fun onCreateView(
@@ -66,24 +66,21 @@ class mapFragment : Fragment() {
                     Log.d("map_fragment", "Map ready: ")
                     initMapFragment()
                     initViews()
-//                    initViews()
-//                    getUser()
-//                    gpsEnabled = isGpsEnabled() //Ask to enable gps sensor if needed
-//                    if (!MyLocationServices.getInstance().checkLocationPermission()) {
-//                        requestPermision()
-//                    } else {
-//                        initMapFragment()
-//                    }
+                    initAllPosts()
                 }
             }
         }
-        return binding?.root
+        return binding.root
     }
 
     private fun initMapFragment() {
         gMap?.let {
-            if (isGpsEnabled()) {
+            if (MyLocationServices.getInstance(this.requireActivity()).isGpsEnabledRequest(this.requireActivity())) {
                 Log.d("map_fragment", "initMapFragment: gpsEnabled")
+                it.setOnMarkerClickListener {
+                    var markerLatLng = LatLng(it.position.latitude,it.position.longitude)
+                    navigate(myCurrentLatLng,markerLatLng)
+                }
                 setupMap(it)
                 setLocationSource(it)   //TODO: DEBUG
             }
@@ -155,24 +152,7 @@ class mapFragment : Fragment() {
     }
 
 
-    private fun isGpsEnabled(): Boolean {
-        if (!MyLocationServices.getInstance(this.requireActivity().applicationContext).isGpsEnabled()) {
-            MySignal.getInstance().alertDialog(this.requireActivity(),
-                "GPS IS DISABLED",
-                "Press \'Enable GPS\' to open gps settings",
-                "Enable GPS",
-                "Cancel",
-                DialogInterface.OnClickListener { dialog, id ->
-                    requireActivity().startActivity(
-                        Intent(
-                            Settings.ACTION_LOCATION_SOURCE_SETTINGS
-                        )
-                    )
-                })
-            return false
-        }
-        return true
-    }
+
 
     private fun initCurrentLocation() {
         MyLocationServices.getInstance(this.requireContext()).setLastBestLocation(object :
@@ -216,13 +196,13 @@ class mapFragment : Fragment() {
         if (MyLocationServices.getInstance(requireContext()).checkLocationPermission()) {
             Log.d("map_fragment", "locationReady: setMyLocationTrue")
             map.setMyLocationEnabled(true)
+            initCurrentLocation()
+
         }
-        initCurrentLocation()
     }
 
-
-
     private fun registerLocationReceiver() {
+        Log.d("map_fragment", "registerLocationReceiver: ")
         locationReceiver = LocationReceiver(object : LocationReceiver.CallBack_LatLngUpdate {
             override fun latLngUpdate(latLng: LatLng?) {
                 latLng?.let {
@@ -249,10 +229,56 @@ class mapFragment : Fragment() {
 
     }
 
+    private fun addPostToMap(post: Post) {
+        gMap?.let {
+            /**
+             * Callback method that call by click on element from list view in ParkingHistoryFragment, method set marker of the history parking on map.
+             */
+            val latLng = LatLng(post.latitude.toDouble(), post.longitude.toDouble())
+            addMarkerToMap(it, latLng, post.locationParking, PARKING_ICON)
+        }
+    }
+
+    private fun initAllPosts() {
+        FirestoreManager().getPostListFromDB(object : FirestoreManager.AllPostsCallback {
+            override fun postListReady(list: MutableList<Post>) {
+                Log.d("map_fragment", "postListReady: list= $list")
+                for (post in list) {
+                    addPostToMap(post)
+                }
+            }
+        })
+    }
+
+    private fun navigate(source: LatLng?,dest: LatLng?) : Boolean {
+        if(source!=null && dest!=null) {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("http://maps.google.com/maps?saddr="+source.latitude+","+source.longitude+"&daddr="+dest.latitude+","+dest.longitude)
+            )
+            startActivity(intent)
+            return true
+        }   else {
+            return false
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("map_fragment", "POST FRAGMENT- onStart: ")
+        gMap?.let { registerLocationReceiver() }
+    }
+
+
     override fun onStop() {
         super.onStop()
         Log.d("map_fragment", "MAP FRAGMENT- onStop: ")
         unRegisterLocationReceiver(locationReceiver)
+    }
+
+    override fun onPostCreated(post: Post) {
+        addPostToMap(post)
     }
 
 }
