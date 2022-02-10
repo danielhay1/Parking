@@ -33,24 +33,16 @@ class HomeFragment : Fragment() , GetAllPostCallBack {
     private lateinit var  allPost:ArrayList<Post>
 
 
-    init {
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
         binding = FragmentHomeBinding.inflate(inflater, container , false)
-
-
         listeners()
         initValues()
         initCallBack()
         getPostFromDB()
         initRecycler()
         visibilityProgressBarAllPost(View.VISIBLE)
-
-
         return binding.root
     }
 

@@ -33,24 +33,14 @@ import java.util.*
 
 class PostFragment : Fragment() , ImageUriCallBack {
 
-    public interface NewPostCallBack {  //TODO: consider to remove
-        public fun onPostCreated(post: Post)
-    }
-
     private val LARGE_SCALE = 18
     private lateinit var binding: FragmentPostBinding
-   // private val newPostCallBack: newPostCallBack? = null
     private var photoUri: Uri? = null
     private var dbManager: DBManager? = null
     private lateinit var homeActivity: HomeActivity
     private var locationChangedListener: LocationSource.OnLocationChangedListener? = null
     private var locationReceiver: LocationReceiver? = null
     private var myCurrentLatLng : LatLng? = null
-
-
-
-    private val newPostCallback: NewPostCallBack? = null
-
     //private val mapManagerPost: MapManagerPost? = null
 
     override fun onCreateView(
@@ -63,7 +53,6 @@ class PostFragment : Fragment() , ImageUriCallBack {
 
         initValues()
         initMap(inflater,container)
-        //activateMap()
         initListeners()
         initObjects()
         initCallBacks()
@@ -105,10 +94,6 @@ class PostFragment : Fragment() , ImageUriCallBack {
             //save the photo in storage DB and return from call back the uri photo
             photoUri?.let { dbManager?.savePhotoToStorageUri(it) }
             homeActivity.onBackPressed()
-//            if (newPostCallBack != null) {
-
-//                newPostCallBack.activateLinearProgressBar()
-//            }
         }
     }
 

@@ -131,7 +131,7 @@ class RecyclerPosts(var postList: ArrayList<Post>,private var navigateBtnCallbac
             post: Post
         ) {
             if (post.isCurrentUserMakeLike()) {
-                textViewLike.setTextColor(ContextCompat.getColor(textViewLike.context,R.color.orange))
+                textViewLike.setTextColor(ContextCompat.getColor(textViewLike.context,R.color.application_dark_blue))
                 likeBtn.isLiked = true
             } else {
                 textViewLike.setTextColor(ContextCompat.getColor(textViewLike.context,R.color.gray))

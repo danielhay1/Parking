@@ -10,14 +10,14 @@
     tools:context=".fragments.LoginFragment">
 
     <!---> Logo <!-->
+
     <ImageView
         android:id="@+id/login_IMG_logo"
-        android:layout_width="wrap_content"
+        android:layout_width="170dp"
         android:layout_height="1dp"
+        android:layout_marginTop="44dp"
         android:layout_weight="1"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/ic_launcher_background"
-        />
+        android:src="@drawable/parkit_logo"/>
 
     <LinearLayout
         android:layout_width="match_parent"

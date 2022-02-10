@@ -19,18 +19,7 @@ import com.google.android.gms.maps.model.LatLng
 import java.util.*
 import kotlin.collections.ArrayList
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MyPostsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MyPostsFragment : Fragment() , GetMyPostsCallBack{
-
 
     private lateinit var binding: FragmentMyPostsBinding
     private lateinit var  myPosts:ArrayList<Post>
@@ -41,7 +30,6 @@ class MyPostsFragment : Fragment() , GetMyPostsCallBack{
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMyPostsBinding.inflate(inflater , container , false)
-
         initValues()
         initRecycler()
         initCallBacks()
@@ -78,12 +66,13 @@ class MyPostsFragment : Fragment() , GetMyPostsCallBack{
     }
 
     override fun getMyPostsCallBack(posts: ArrayList<Post>) {
-        //Collections.sort(posts , postComparator())
+        Collections.sort(posts , postComparator())
         myPosts.addAll(posts)
         binding.myPostREVPosts.adapter?.notifyItemRangeInserted(0, posts.size)
         visibilityProgressBarMyPost(View.GONE)
 
     }
+
     private fun visibilityProgressBarMyPost(visible: Int) {
         binding.myPostPRBAllPosts.visibility = visible
     }

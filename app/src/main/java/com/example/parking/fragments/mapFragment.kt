@@ -35,7 +35,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 
-class mapFragment : Fragment(), PostFragment.NewPostCallBack {
+class mapFragment : Fragment() {
 
     private val NORMAL_SCALE = 16
     private val PARKING_ICON = "car_png_marker"
@@ -117,24 +117,6 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
             navigate(myCurrentLatLng,markerLatLng)
         }
 
-    }
-
-    private fun initLocationListener() {
-        locationReceiver = LocationReceiver(object : LocationReceiver.CallBack_LatLngUpdate {
-            override fun latLngUpdate(latLng: LatLng?) {
-                latLng?.let {
-                    val location = Location("")
-                    location.latitude = it.latitude
-                    location.longitude = it.longitude
-                    locationChangedListener?.onLocationChanged(location)
-                    myCurrentLatLng = it
-                    Log.d("map_fragment", "latLngUpdate: ${myCurrentLatLng}")
-                    if (autoFocusCurrentLocation) {
-                        setFocus(myCurrentLatLng, NORMAL_SCALE.toFloat())
-                    }
-                }
-            }
-        })
     }
 
     fun addMarkerToMap(
@@ -298,11 +280,6 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
 
     }
 
-//    override fun onStart() {
-//        super.onStart()
-//        Log.d("map_fragment", "POST FRAGMENT- onStart: ")
-//        gMap?.let { registerLocationReceiver() }
-//    }
     override fun onDestroy() {
         super.onDestroy()
         Log.d("map_fragment", "MAP FRAGMENT- onDestroy: ")
@@ -331,9 +308,4 @@ class mapFragment : Fragment(), PostFragment.NewPostCallBack {
         Log.d("map_fragment", "MAP FRAGMENT- onPause: ")
         unRegisterLocationReceiver()
     }
-
-    override fun onPostCreated(post: Post) {
-        addPostToMap(post)
-    }
-
 }
