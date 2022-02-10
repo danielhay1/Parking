@@ -53,11 +53,13 @@ class mapFragment : Fragment() {
                 location.latitude = it.latitude
                 location.longitude = it.longitude
                 locationChangedListener?.onLocationChanged(location)
-                myCurrentLatLng = it
-                Log.d("map_fragment", "latLngUpdate: ${myCurrentLatLng}")
-                if (autoFocusCurrentLocation) {
+                if (autoFocusCurrentLocation || myCurrentLatLng==null) {
+                    myCurrentLatLng = it
                     setFocus(myCurrentLatLng, NORMAL_SCALE.toFloat())
+                } else {
+                    myCurrentLatLng = it
                 }
+                Log.d("map_fragment", "latLngUpdate: ${myCurrentLatLng}")
             }
         }
     })
@@ -213,7 +215,7 @@ class mapFragment : Fragment() {
         if (MyLocationServices.getInstance(requireContext()).checkLocationPermission()) {
             Log.d("map_fragment", "locationReady: setMyLocationTrue")
             map.setMyLocationEnabled(true)
-            initCurrentLocation()
+            //initCurrentLocation()
         }
     }
 
